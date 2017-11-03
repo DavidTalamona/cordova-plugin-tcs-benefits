@@ -47,32 +47,31 @@ public class TcsPlugin extends CordovaPlugin {
 
 	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
-		switch (action) {
-			case "startTrackingLocationUpdates":
-				startTrackingLocationUpdates(callbackContext);
-				break;
-			case "stopTrackingLocationUpdates":
-				stopTrackingLocationUpdates();
-				break;
-			case "hasGpsPermission":
-				boolean hasPermission = hasGpsPermission();
-				callbackContext.success(hasPermission ? "1" : "0");
-				break;
-			case "requestGpsPermission":
-				boolean isPermissionGranted = requestGpsPermission();
-				callbackContext.success(isPermissionGranted ? "1" : "0");
-				break;
-			case "storageSave":
-				storageSave(args.getString(0), args.getString(1));
-				break;
-			case "storageLoad":
-				String savedString = storageLoad(args.getString(0));
-				callbackContext.success(savedString);
-				break;
-			case "getMemberNumber":
-				String memberNumber = getMemberNumber();
-				callbackContext.success(memberNumber);
-				break;
+		if (action.equals("startTrackingLocationUpdates")) {
+			startTrackingLocationUpdates(callbackContext);
+
+		} else if (action.equals("stopTrackingLocationUpdates")) {
+			stopTrackingLocationUpdates();
+
+		} else if (action.equals("hasGpsPermission")) {
+			boolean hasPermission = hasGpsPermission();
+			callbackContext.success(hasPermission ? "1" : "0");
+
+		} else if (action.equals("requestGpsPermission")) {
+			boolean isPermissionGranted = requestGpsPermission();
+			callbackContext.success(isPermissionGranted ? "1" : "0");
+
+		} else if (action.equals("storageSave")) {
+			storageSave(args.getString(0), args.getString(1));
+
+		} else if (action.equals("storageLoad")) {
+			String savedString = storageLoad(args.getString(0));
+			callbackContext.success(savedString);
+
+		} else if (action.equals("getMemberNumber")) {
+			String memberNumber = getMemberNumber();
+			callbackContext.success(memberNumber);
+
 		}
 		return true;
 	}
