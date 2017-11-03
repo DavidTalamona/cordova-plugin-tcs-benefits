@@ -5,7 +5,7 @@
     "id": "apnet-cordova-plugin-tcs",
     "platforms": [
       "android",
-      "ios",
+      "ios"
     ]
   },
   "description": "Interface from Pluscash TCS app to TCSSKD from iAgentur"
