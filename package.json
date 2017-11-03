@@ -1,12 +1,12 @@
 {
-  "name": "cordova-plugin-template",
-  "version": "1.0.0",
+  "name": "apnet-cordova-plugin-tcs",
+  "version": "0.1.0",
   "cordova": {
-    "id": "cordova-plugin-template",
+    "id": "apnet-cordova-plugin-tcs",
     "platforms": [
       "android",
       "ios",
     ]
   },
-  "description": "A starting point for a Cordova Plugin"
+  "description": "Interface from Pluscash TCS app to TCSSKD from iAgentur"
 }

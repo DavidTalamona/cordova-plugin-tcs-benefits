@@ -4,11 +4,11 @@
     id="apnet-cordova-plugin-tcs"
     version="0.1.0">
     <name>ApNet TCS Plugin</name>
-    <description></description>
+    <description>Interface from Pluscash TCS app to TCSSKD from iAgentur</description>
     <license>Copyright ApNet 2017</license>
     <keywords></keywords>
-    <repo>https://github.com/driftyco/cordova-plugin-template.git</repo>
-    <issue>https://github.com/driftyco/cordova-plugin-template/issues</issue>
+    <repo>https://gitlab.com/cwx-apn/tcs/cordova-plugin.git</repo>
+    <issue>https://gitlab.com/cwx-apn/tcs/cordova-plugin/issues</issue>
 
     <!-- android -->
     <platform name="android">
