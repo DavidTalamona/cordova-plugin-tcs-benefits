@@ -20,7 +20,7 @@
       </js-module>
       <config-file target="res/xml/config.xml" parent="/*">
         <feature name="TcsPlugin">
-          <param name="android-package" value="ch.apnet.plugin.tcs" />
+          <param name="android-package" value="ch.apnet.plugin.tcs.TcsPlugin" />
           <param name="onload" value="true" />
         </feature>
       </config-file>
