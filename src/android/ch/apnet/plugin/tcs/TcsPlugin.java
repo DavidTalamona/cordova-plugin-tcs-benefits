@@ -6,11 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.telecom.Call;
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.PluginResult;
+import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -30,13 +26,16 @@ public class TcsPlugin extends CordovaPlugin {
 	private TCSKVStorage storage = new TCSKVStorageMock();
 	private boolean isTrackingLocation = false;
 
+	@Override
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
+
+		Log.d(TAG, "Start Initializing TcsPlugin");
 
 		this.context = this.cordova.getActivity().getApplicationContext();
 		this.prefs = getPreferences();
 
-		Log.d(TAG, "Initializing TcsPlugin");
+		Log.d(TAG, "Finish Initializing TcsPlugin");
 	}
 
 	private SharedPreferences getPreferences() {
@@ -45,6 +44,7 @@ public class TcsPlugin extends CordovaPlugin {
 		return prefs;
 	}
 
+	@Override
 	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
 		if (action.equals("startTrackingLocationUpdates")) {
