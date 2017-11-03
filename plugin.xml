@@ -25,7 +25,7 @@
         </feature>
       </config-file>
 
-      <source-file src="src/android/com/example/TcsPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
+      <source-file src="src/android/ch/apnet/plugin/tcs/TcsPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
     </platform>
 
     <!-- ios -->
