@@ -1,6 +1,7 @@
 package ch.apnet.plugin.tcs;
 
 import android.content.SharedPreferences;
+import ch.apnet.plugin.tcs.TCSKVStorage;
 
 public class TCSKVStorageMock implements TCSKVStorage {
 	@Override

@@ -15,6 +15,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
+import ch.apnet.plugin.tcs.TCSKVStorage;
+import ch.apnet.plugin.tcs.TCSKVStorageMock;
+
 import android.util.Log;
 
 
