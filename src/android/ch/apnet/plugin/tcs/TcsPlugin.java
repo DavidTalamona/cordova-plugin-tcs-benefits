@@ -76,7 +76,7 @@ public class TcsPlugin extends CordovaPlugin {
 		return true;
 	}
 
-	private void startTrackingLocationUpdates(CallbackContext cb) {
+	private void startTrackingLocationUpdates(final CallbackContext cb) {
 		isTrackingLocation = true;
 		cordova.getThreadPool().execute(new Runnable() {
 			public void run() {
