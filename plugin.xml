@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="apnet-cordova-plugin-tcs"
+    version="0.1.0">
+    <name>ApNet TCS Plugin</name>
+    <description></description>
+    <license>Copyright ApNet 2017</license>
+    <keywords></keywords>
+    <repo>https://github.com/driftyco/cordova-plugin-template.git</repo>
+    <issue>https://github.com/driftyco/cordova-plugin-template/issues</issue>
+
+    <!-- android -->
+    <platform name="android">
+      <js-module src="www/plugin.js" name="plugin">
+        <runs/>
+
+        <!-- This is the window variable name you want, like window.MyCordovaPlugin -->
+        <clobbers target="TcsPlugin" />
+      </js-module>
+      <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="TcsPlugin">
+          <param name="android-package" value="ch.apnet.plugin.tcs" />
+          <param name="onload" value="true" />
+        </feature>
+      </config-file>
+
+      <source-file src="src/android/com/example/TcsPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
+    </platform>
+
+    <!-- ios -->
+    <platform name="ios">
+        <js-module src="www/plugin.js" name="plugin">
+            <runs/>
+            <clobbers target="TcsPlugin" />
+        </js-module>
+        <config-file target="config.xml" parent="/*">
+            <feature name="TcsPlugin">
+                <param name="ios-package" value="TcsPlugin" onload="true" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/TcsPlugin.h" />
+        <source-file src="src/ios/TcsPlugin.m" />
+    </platform>
+</plugin>
