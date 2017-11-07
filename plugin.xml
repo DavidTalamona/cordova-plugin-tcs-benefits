@@ -42,7 +42,6 @@
             </feature>
         </config-file>
 
-        <header-file src="src/ios/TcsPlugin.h" />
-        <source-file src="src/ios/TcsPlugin.m" />
+        <source-file src="src/ios/TcsPlugin.swift" />
     </platform>
 </plugin>

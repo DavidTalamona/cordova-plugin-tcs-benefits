@@ -15,4 +15,11 @@ public class TCSKVStorageMock implements TCSKVStorage {
 		editor.putString(key, value);
 		editor.commit();
 	}
+
+	@Override
+	public void clearStringValue(String key, SharedPreferences prefs) {
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.remove(key);
+		editor.commit();
+	}
 }

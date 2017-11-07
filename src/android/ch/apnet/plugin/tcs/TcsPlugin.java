@@ -68,6 +68,9 @@ public class TcsPlugin extends CordovaPlugin {
 			String savedString = storageLoad(args.getString(0));
 			callbackContext.success(savedString);
 
+		} else if (action.equals("storageClear")) {
+			storageClear(args.getString(0));
+
 		} else if (action.equals("getMemberNumber")) {
 			String memberNumber = getMemberNumber();
 			callbackContext.success(memberNumber);
@@ -116,6 +119,10 @@ public class TcsPlugin extends CordovaPlugin {
 
 	private String storageLoad(String key) {
 		return this.storage.getStringValue(key, this.prefs);
+	}
+
+	private void storageClear(String key) {
+		this.storage.clearStringValue(key, this.prefs);
 	}
 
 	private String getMemberNumber() {
