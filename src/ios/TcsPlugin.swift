@@ -1,20 +1,20 @@
 @objc(TcsPlugin) class TcsPlugin : CDVPlugin {
 
-  let isTracking = false;
+  var isTracking = false;
 
   @objc(startTrackingLocationUpdates:)
   func startTrackingLocationUpdates(command: CDVInvokedUrlCommand) {
     isTracking = true;
     commandDelegate.run(inBackground: {() -> Void in
-      while(isTracking) {
+      while(self.isTracking) {
 
-        let payload: String? = nil
-        payload = "{" + "'latitude': " + 47.6961188 + "," +
-        "'longitude': " + 47.696897 + "," +
-        "'accuracy': " + 76.3 + "}"
+        var payload: String? = nil
+        payload = "{" + "'latitude': " + "47.6961188" + "," +
+        "'longitude': " + "47.696897" + "," +
+        "'accuracy': " + "76.3" + "}"
 
-        var pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: payload)
-        commandDelegate.send(pluginResult, callbackId: command.callbackId)
+        let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: payload)
+        self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
 
         sleep(5)
       }
@@ -67,7 +67,8 @@
   func storageLoad(command: CDVInvokedUrlCommand) {
     let key = command.arguments[0] as? String ?? ""
 
-    if let value: String = UserDefaults.standard.object(forKey: key) as String? { }
+    let userDefaults = UserDefaults.standard
+    let value = userDefaults.string(forKey: key)
 
     let pluginResult = CDVPluginResult(
       status: CDVCommandStatus_OK,
@@ -85,7 +86,7 @@
     let key = command.arguments[0] as? String ?? ""
 
     let userDefaults = UserDefaults.standard
-    userDefaults.removeObjectForKey(key)
+    userDefaults.removeObject(forKey: key)
     userDefaults.synchronize()
   }
 
