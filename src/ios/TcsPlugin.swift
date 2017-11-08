@@ -9,9 +9,9 @@
       while(self.isTracking) {
 
         var payload: String? = nil
-        payload = "{" + "'latitude': " + "47.6961188" + "," +
-        "'longitude': " + "47.696897" + "," +
-        "'accuracy': " + "76.3" + "}"
+        payload = "{" + "\"latitude\": " + "47.6961188" + "," +
+        "\"longitude\": " + "47.696897" + "," +
+        "\"accuracy\": " + "76.3" + "}"
 
         let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: payload)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
