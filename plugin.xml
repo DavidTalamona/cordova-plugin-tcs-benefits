@@ -38,7 +38,8 @@
         </js-module>
         <config-file target="config.xml" parent="/*">
             <feature name="TcsPlugin">
-                <param name="ios-package" value="TcsPlugin" onload="true" />
+                <param name="ios-package" value="TcsPlugin" />
+	            <param name="onload" value="true" />
             </feature>
         </config-file>
 
