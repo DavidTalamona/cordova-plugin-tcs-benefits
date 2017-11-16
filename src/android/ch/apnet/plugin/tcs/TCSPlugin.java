@@ -16,7 +16,6 @@ import ch.apnet.module.tcs.android.TCSBenefitsDynamicLinksHandler;
 import ch.apnet.module.tcs.android.TCSBenefitsModule;
 import ch.tcs.android.tcsframework.components.TCSGPSComponent;
 import ch.tcs.android.tcsframework.components.TCSKVStorage;
-import ch.tcs.android.tcsframework.components.TCSPushComponent;
 import ch.tcs.android.tcsframework.components.TCSUserComponent;
 import ch.tcs.android.tcsframework.domain.model.login.Account;
 import ch.tcs.android.tcsframework.managers.permissions.TCSAndroidPermissionManager;
@@ -34,7 +33,6 @@ public class TCSPlugin extends CordovaPlugin {
 	private TCSAndroidPermissionManager tcsPermission;
 	private TCSKVStorage tcsStorage;
 	private TCSBenefitsDynamicLinksHandler tcsLinks;
-	private TCSPushComponent tcsPush;
 
 	private boolean isTrackingLocation = false;
 
@@ -47,7 +45,6 @@ public class TCSPlugin extends CordovaPlugin {
 		this.tcsPermission = TCSBenefitsModule.getTcsPermissionManager();
 		this.tcsStorage = this.tcsProvider.provideKVComponent();
 		this.tcsLinks = TCSBenefitsModule.getTcsLinksHandler();
-		this.tcsPush = TCSBenefitsModule.getTcsPush();
 
 		Log.d(TAG, "Finish Initializing TCSPlugin");
 	}
