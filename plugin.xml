@@ -19,30 +19,28 @@
         <clobbers target="TcsPlugin" />
       </js-module>
       <config-file target="res/xml/config.xml" parent="/*">
-        <feature name="TcsPlugin">
-          <param name="android-package" value="ch.apnet.plugin.tcs.TcsPlugin" />
+        <feature name="TCSPlugin">
+          <param name="android-package" value="ch.apnet.plugin.tcs.TCSPlugin" />
           <param name="onload" value="true" />
         </feature>
       </config-file>
 
-      <source-file src="src/android/ch/apnet/plugin/tcs/TcsPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
-      <source-file src="src/android/ch/apnet/plugin/tcs/TCSKVStorage.java" target-dir="src/ch/apnet/plugin/tcs/" />
-      <source-file src="src/android/ch/apnet/plugin/tcs/TCSKVStorageMock.java" target-dir="src/ch/apnet/plugin/tcs/" />
+      <source-file src="src/android/ch/apnet/plugin/tcs/TCSPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
     </platform>
 
     <!-- ios -->
     <platform name="ios">
         <js-module src="www/plugin.js" name="plugin">
             <runs/>
-            <clobbers target="TcsPlugin" />
+            <clobbers target="TCSPlugin" />
         </js-module>
         <config-file target="config.xml" parent="/*">
-            <feature name="TcsPlugin">
-                <param name="ios-package" value="TcsPlugin" />
+            <feature name="TCSPlugin">
+                <param name="ios-package" value="TCSPlugin" />
 	            <param name="onload" value="true" />
             </feature>
         </config-file>
 
-        <source-file src="src/ios/TcsPlugin.swift" />
+        <source-file src="src/ios/TCSPlugin.swift" />
     </platform>
 </plugin>

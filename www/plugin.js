@@ -1,9 +1,9 @@
 
 var exec = require('cordova/exec');
 
-var PLUGIN_NAME = 'TcsPlugin';
+var PLUGIN_NAME = 'TCSPlugin';
 
-var TcsPlugin = {
+var TCSPlugin = {
 	startTrackingLocationUpdates: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'startTrackingLocationUpdates', []);
 	},
@@ -27,7 +27,10 @@ var TcsPlugin = {
 	},
 	getMemberNumber: function(cb) { // returns null if no user is logged in
 		exec(cb, null, PLUGIN_NAME, 'getMemberNumber', []);
+	},
+	registerDynamicLinks: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'registerDynamicLinks', []);
 	}
 };
 
-module.exports = TcsPlugin;
+module.exports = TCSPlugin;

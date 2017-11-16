@@ -1,4 +1,4 @@
-@objc(TcsPlugin) class TcsPlugin : CDVPlugin {
+@objc(TCSPlugin) class TCSPlugin : CDVPlugin {
 
   var isTracking = false;
 
