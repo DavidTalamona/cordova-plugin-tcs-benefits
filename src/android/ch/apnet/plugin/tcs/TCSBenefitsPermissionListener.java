@@ -8,19 +8,19 @@ import ch.tcs.android.tcsframework.managers.permissions.helperinterfaces.TCSPerm
 
 public class TCSBenefitsPermissionListener implements TCSPermissionRequestListener {
 
-    private boolean isPermissionGranted = false;
+	private boolean isPermissionGranted = false;
 
-    @Override
-    public void onPermissionGranted() {
-        isPermissionGranted = true;
-    }
+	@Override
+	public void onPermissionGranted() {
+		isPermissionGranted = true;
+	}
 
-    @Override
-    public void onPermissionDenied() {
-        isPermissionGranted = false;
-    }
+	@Override
+	public void onPermissionDenied() {
+		isPermissionGranted = false;
+	}
 
-    public boolean isPermissionGranted() {
-        return isPermissionGranted;
-    }
+	public boolean isPermissionGranted() {
+		return isPermissionGranted;
+	}
 }

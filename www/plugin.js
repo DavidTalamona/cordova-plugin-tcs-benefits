@@ -28,8 +28,11 @@ var TCSPlugin = {
 	getMemberNumber: function(cb) { // returns null if no user is logged in
 		exec(cb, null, PLUGIN_NAME, 'getMemberNumber', []);
 	},
-	registerDynamicLinks: function(cb) {
-		exec(cb, null, PLUGIN_NAME, 'registerDynamicLinks', []);
+	registerDeepLinks: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'registerDeepLinks', []);
+	},
+	getPushToken: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'getPushToken', []);
 	}
 };
 

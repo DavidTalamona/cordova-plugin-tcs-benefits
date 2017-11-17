@@ -14,8 +14,10 @@ import org.json.JSONObject;
 
 import ch.apnet.module.tcs.android.TCSBenefitsDynamicLinksHandler;
 import ch.apnet.module.tcs.android.TCSBenefitsModule;
+import ch.apnet.module.tcs.android.TCSBenefitsNotificationsProvider;
 import ch.tcs.android.tcsframework.components.TCSGPSComponent;
 import ch.tcs.android.tcsframework.components.TCSKVStorage;
+import ch.tcs.android.tcsframework.components.TCSPushComponent;
 import ch.tcs.android.tcsframework.components.TCSUserComponent;
 import ch.tcs.android.tcsframework.domain.model.login.Account;
 import ch.tcs.android.tcsframework.managers.permissions.TCSAndroidPermissionManager;
@@ -33,6 +35,8 @@ public class TCSPlugin extends CordovaPlugin {
 	private TCSAndroidPermissionManager tcsPermission;
 	private TCSKVStorage tcsStorage;
 	private TCSBenefitsDynamicLinksHandler tcsLinks;
+	private TCSBenefitsNotificationsProvider tcsNotifications;
+	private TCSPushComponent tcsPush;
 
 	private boolean isTrackingLocation = false;
 
@@ -45,6 +49,8 @@ public class TCSPlugin extends CordovaPlugin {
 		this.tcsPermission = TCSBenefitsModule.getTcsPermissionManager();
 		this.tcsStorage = this.tcsProvider.provideKVComponent();
 		this.tcsLinks = TCSBenefitsModule.getTcsLinksHandler();
+		this.tcsNotifications = TCSBenefitsModule.getTcsNotificationsHandler();
+		this.tcsPush = TCSBenefitsModule.getTcsPush();
 
 		Log.d(TAG, "Finish Initializing TCSPlugin");
 	}
@@ -78,8 +84,20 @@ public class TCSPlugin extends CordovaPlugin {
 
 		} else if (action.equals("getMemberNumber")) {
 			getMemberNumber(callbackContext);
-		} else if (action.equals("registerDynamicLinks")) {
+
+		} else if (action.equals("registerDeepLinks")) {
 			tcsLinks.setCallbackContext(callbackContext);
+			tcsNotifications.setCallbackContext(callbackContext);
+
+		} else if (action.equals("getPushToken")) {
+			tcsPush.subscribeOnPushNotifications(new Function1<String, Unit>() {
+				@Override
+				public Unit invoke(String s) {
+					callbackContext.success(s);
+					return null;
+				}
+			});
+
 		}
 		return true;
 	}
