@@ -28,9 +28,6 @@
 		<source-file src="src/android/ch/apnet/plugin/tcs/TCSPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
 		<source-file src="src/android/ch/apnet/plugin/tcs/TCSBenefitsPermissionListener.java" target-dir="src/ch/apnet/plugin/tcs/" />
 
-		<framework src="src/android/plugin.gradle" custom="true" type="gradleReference" />
-		<resource-file src="libraries/tcssdk-release.aar" target="libs/tcssdk-release.aar" />
-
 	</platform>
 
 	<!-- ios -->
