@@ -51,8 +51,6 @@ public class TCSPlugin extends CordovaPlugin {
 		this.tcsLinks = TCSBenefitsModule.getTcsLinksHandler();
 		this.tcsNotifications = TCSBenefitsModule.getTcsNotificationsHandler();
 		this.tcsPush = TCSBenefitsModule.getTcsPush();
-
-		Log.d(TAG, "Finish Initializing TCSPlugin");
 	}
 
 	@Override

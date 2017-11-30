@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="apnet-cordova-plugin-tcs"
-    version="0.1.1">
-    <name>ApNet TCS Plugin</name>
-    <description>Interface from Pluscash TCS app to TCSSKD from iAgentur</description>
-    <license>Copyright ApNet 2017</license>
-    <keywords></keywords>
-    <repo>https://gitlab.com/cwx-apn/tcs/cordova-plugin.git</repo>
-    <issue>https://gitlab.com/cwx-apn/tcs/cordova-plugin/issues</issue>
+        id="apnet-cordova-plugin-tcs"
+        version="0.1.1">
+	<name>ApNet TCS Plugin</name>
+	<description>Interface from Pluscash TCS app to TCSSKD from iAgentur</description>
+	<license>Copyright ApNet 2017</license>
+	<keywords></keywords>
+	<repo>https://gitlab.com/cwx-apn/tcs/cordova-plugin.git</repo>
+	<issue>https://gitlab.com/cwx-apn/tcs/cordova-plugin/issues</issue>
 
-    <!-- android -->
-    <platform name="android">
-      <js-module src="www/plugin.js" name="plugin">
-        <runs/>
+	<!-- android -->
+	<platform name="android">
+		<js-module src="www/plugin.js" name="plugin">
+			<runs />
 
-        <!-- This is the window variable name you want, like window.MyCordovaPlugin -->
-        <clobbers target="TcsPlugin" />
-      </js-module>
-      <config-file target="res/xml/config.xml" parent="/*">
-        <feature name="TCSPlugin">
-          <param name="android-package" value="ch.apnet.plugin.tcs.TCSPlugin" />
-          <param name="onload" value="true" />
-        </feature>
-      </config-file>
+			<!-- This is the window variable name you want, like window.MyCordovaPlugin -->
+			<clobbers target="TcsPlugin" />
+		</js-module>
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="TCSPlugin">
+				<param name="android-package" value="ch.apnet.plugin.tcs.TCSPlugin" />
+				<param name="onload" value="true" />
+			</feature>
+		</config-file>
 
-      <source-file src="src/android/ch/apnet/plugin/tcs/TCSPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
-      <source-file src="src/android/ch/apnet/plugin/tcs/TCSBenefitsPermissionListener.java" target-dir="src/ch/apnet/plugin/tcs/" />
-    </platform>
+		<source-file src="src/android/ch/apnet/plugin/tcs/TCSPlugin.java" target-dir="src/ch/apnet/plugin/tcs/" />
+		<source-file src="src/android/ch/apnet/plugin/tcs/TCSBenefitsPermissionListener.java" target-dir="src/ch/apnet/plugin/tcs/" />
 
-    <!-- ios -->
-    <platform name="ios">
-        <js-module src="www/plugin.js" name="plugin">
-            <runs/>
-            <clobbers target="TCSPlugin" />
-        </js-module>
-        <config-file target="config.xml" parent="/*">
-            <feature name="TCSPlugin">
-                <param name="ios-package" value="TCSPlugin" />
-	            <param name="onload" value="true" />
-            </feature>
-        </config-file>
+		<framework src="src/android/plugin.gradle" custom="true" type="gradleReference" />
+		<resource-file src="libraries/tcssdk-release.aar" target="libs/tcssdk-release.aar" />
 
-        <source-file src="src/ios/TCSPlugin.swift" />
-    </platform>
+	</platform>
+
+	<!-- ios -->
+	<platform name="ios">
+		<js-module src="www/plugin.js" name="plugin">
+			<runs />
+			<clobbers target="TCSPlugin" />
+		</js-module>
+		<config-file target="config.xml" parent="/*">
+			<feature name="TCSPlugin">
+				<param name="ios-package" value="TCSPlugin" />
+				<param name="onload" value="true" />
+			</feature>
+		</config-file>
+
+		<source-file src="src/ios/TCSPlugin.swift" />
+	</platform>
 </plugin>
