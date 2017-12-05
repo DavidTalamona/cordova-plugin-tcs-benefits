@@ -67,8 +67,7 @@ public class TCSPlugin extends CordovaPlugin {
 			callbackContext.success(hasPermission ? "1" : "0");
 
 		} else if (action.equals("requestGpsPermission")) {
-			boolean isPermissionGranted = requestGpsPermission();
-			callbackContext.success(isPermissionGranted ? "1" : "0");
+			requestGpsPermission();
 
 		} else if (action.equals("storageSave")) {
 			storageSave(args.getString(0), args.getString(1));
@@ -113,6 +112,8 @@ public class TCSPlugin extends CordovaPlugin {
 					return null;
 				}
 
+				Log.d("GPS Tracking", "In method....");
+
 				JSONObject result = new JSONObject();
 
 				try {
@@ -137,10 +138,9 @@ public class TCSPlugin extends CordovaPlugin {
 		return this.tcsPermission.isLocationPermissionGranted(this.context);
 	}
 
-	private boolean requestGpsPermission() {
+	private void requestGpsPermission() {
 		TCSBenefitsPermissionListener listener = new TCSBenefitsPermissionListener();
 		this.tcsPermission.requestLocationPermission(this.cordova.getActivity(), "GPS Permission", listener);
-		return listener.isPermissionGranted();
 	}
 
 	private void storageSave(String key, String value) {
@@ -161,13 +161,13 @@ public class TCSPlugin extends CordovaPlugin {
 			tcsUser.getAccountInfo(new Function1<Account, Unit>() {
 				@Override
 				public Unit invoke(Account account) {
-					cb.success(account.getPersonalReference()); //TODO: which info on account is the TCS member number?
+					cb.success(account.getPersonalReference());
 					return null;
 				}
 			}, null); // function2 = errorCallback, we ignore this...
 		}
 		else {
-			cb.success();
+			cb.success("");
 		}
 
 	}
