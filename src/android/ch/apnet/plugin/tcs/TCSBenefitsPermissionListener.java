@@ -1,5 +1,7 @@
 package ch.apnet.plugin.tcs;
 
+import org.apache.cordova.CallbackContext;
+
 import ch.tcs.android.tcsframework.managers.permissions.helperinterfaces.TCSPermissionRequestListener;
 
 /**
@@ -8,19 +10,20 @@ import ch.tcs.android.tcsframework.managers.permissions.helperinterfaces.TCSPerm
 
 public class TCSBenefitsPermissionListener implements TCSPermissionRequestListener {
 
-	private boolean isPermissionGranted = false;
+	private final CallbackContext callbackContext;
+
+	public TCSBenefitsPermissionListener(final CallbackContext callbackContext) {
+		this.callbackContext = callbackContext;
+	}
 
 	@Override
 	public void onPermissionGranted() {
-		isPermissionGranted = true;
+		this.callbackContext.success("1");
 	}
 
 	@Override
 	public void onPermissionDenied() {
-		isPermissionGranted = false;
+		this.callbackContext.success("0");
 	}
 
-	public boolean isPermissionGranted() {
-		return isPermissionGranted;
-	}
 }
