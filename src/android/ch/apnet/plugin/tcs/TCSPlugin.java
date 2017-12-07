@@ -25,6 +25,7 @@ import ch.tcs.android.tcsframework.managers.permissions.TCSAndroidPermissionMana
 import ch.tcs.android.tcsframework.providers.TCSComponentsProvider;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
 
 
 public class TCSPlugin extends CordovaPlugin {
@@ -79,8 +80,8 @@ public class TCSPlugin extends CordovaPlugin {
         } else if (action.equals("storageClear")) {
             storageClear(args.getString(0));
 
-        } else if (action.equals("getMemberNumber")) {
-            getMemberNumber(callbackContext);
+        } else if (action.equals("getMemberInfo")) {
+            getMemberInfo(callbackContext);
 
         } else if (action.equals("registerDeepLinks")) {
             tcsLinks.setCallbackContext(callbackContext);
@@ -156,16 +157,32 @@ public class TCSPlugin extends CordovaPlugin {
         this.tcsStorage.removeValue(key);
     }
 
-    private void getMemberNumber(final CallbackContext cb) {
+    private void getMemberInfo(final CallbackContext cb) {
         TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
         if (tcsUser.isLoggedIn()) {
             tcsUser.getAccountInfo(new Function1<Account, Unit>() {
                 @Override
                 public Unit invoke(Account account) {
-                    cb.success(account.getPersonalReference());
+                    JSONObject result = new JSONObject();
+
+                    try {
+                        result.put("memberNumber", account.getPersonalReference());
+                        result.put("email", account.getEmail());
+                        result.put("sectionCode", account.getSectionCode());
+
+                        cb.success(result);
+                    }
+                    catch (JSONException ex) {}
+
                     return null;
                 }
-            }, null); // function2 = errorCallback, we ignore this...
+            }, new Function2<Integer, String, Unit>() {
+                @Override
+                public Unit invoke(Integer integer, String s) {
+                    Log.e("Error", s);
+                    return null;
+                }
+            }); // function2 = errorCallback
         }
         else {
             cb.success("");

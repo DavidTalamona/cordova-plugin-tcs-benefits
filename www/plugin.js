@@ -25,8 +25,8 @@ var TCSPlugin = {
 	storageClear: function(key, cb) {
 		exec(cb, null, PLUGIN_NAME, 'storageClear', [key]);
 	},
-	getMemberNumber: function(cb) { // returns null if no user is logged in
-		exec(cb, null, PLUGIN_NAME, 'getMemberNumber', []);
+	getMemberInfo: function(cb) { // returns empty string if no user is logged in
+		exec(cb, null, PLUGIN_NAME, 'getMemberInfo', []);
 	},
 	registerDeepLinks: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'registerDeepLinks', []);

@@ -89,17 +89,23 @@ Result:
 void
 ```
 
-## getMemberNumber
+## getMemberInfo
 
 Call:
 ```javascript
-window['TCSPlugin'].getMemberNumber((result) => {});
+window['TCSPlugin'].getMemberInfo((result) => {});
 ```
 
 Result:
 ```
 "" (if user is not logged in)
-"12345678" (member number / if user is logged in)
+```
+```json
+{
+  "memberNumber": "12345678",
+  "email": "muster@tcs.ch",
+  "sectionCode": "17"
+}
 ```
 
 ## registerDeepLinks

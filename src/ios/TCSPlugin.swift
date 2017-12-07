@@ -90,8 +90,8 @@
     userDefaults.synchronize()
   }
 
-  @objc(getMemberNumber:)
-  func getMemberNumber(command: CDVInvokedUrlCommand) {
+  @objc(getMemberInfo:)
+  func getMemberInfo(command: CDVInvokedUrlCommand) {
   	let pluginResult = CDVPluginResult(
       status: CDVCommandStatus_OK,
       messageAs: "105278489"
