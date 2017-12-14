@@ -13,8 +13,8 @@ var TCSPlugin = {
 	hasGpsPermission: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'hasGpsPermission', []);
 	},
-	requestGpsPermission: function(cb) {
-		exec(cb, null, PLUGIN_NAME, 'requestGpsPermission', []);
+	requestGpsPermission: function(permissionReasonText, cb) {
+		exec(cb, null, PLUGIN_NAME, 'requestGpsPermission', [permissionReasonText]);
 	},
 	storageSave: function(key, value, cb) {
 		exec(cb, null, PLUGIN_NAME, 'storageSave', [key, value]);

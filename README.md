@@ -2,7 +2,7 @@
 ## startTrackingLocationUpdates
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].startTrackingLocationUpdates((location) => {});
 ```
 
@@ -30,7 +30,7 @@ void
 ## hasGpsPermission
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].hasGpsPermission((result) => {});
 ```
 
@@ -43,8 +43,8 @@ Result:
 ## requestGpsPermission
 
 Call:
-```javascript
-window['TCSPlugin'].requestGpsPermission((result) => {});
+```typescript
+window['TCSPlugin'].requestGpsPermission("Ich brauche die Permission für...", (result) => {});
 ```
 
 Result:
@@ -56,7 +56,7 @@ Result:
 ## storageSave
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].storageSave("Key", "Value");
 ```
 
@@ -68,7 +68,7 @@ void
 ## storageLoad
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].storageLoad("Key", (value) => {});
 ```
 
@@ -80,7 +80,7 @@ Result:
 ## storageClear
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].storageClear("Key");
 ```
 
@@ -92,7 +92,7 @@ void
 ## getMemberInfo
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].getMemberInfo((result) => {});
 ```
 
@@ -111,7 +111,7 @@ Result:
 ## registerDeepLinks
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].registerDeepLinks((result) => {});
 ```
 
@@ -142,7 +142,7 @@ or
 ## getPushToken
 
 Call:
-```javascript
+```typescript
 window['TCSPlugin'].getPushToken((result) => {});
 ```
 

@@ -29,165 +29,169 @@ import kotlin.jvm.functions.Function2;
 
 
 public class TCSPlugin extends CordovaPlugin {
-    private static final String TAG = "TCSPlugin";
+	private static final String TAG = "TCSPlugin";
 
-    private Context context;
+	private Context context;
 
-    private TCSComponentsProvider tcsProvider;
-    private TCSAndroidPermissionManager tcsPermission;
-    private TCSKVStorage tcsStorage;
-    private TCSBenefitsDynamicLinksHandler tcsLinks;
-    private TCSBenefitsNotificationsProvider tcsNotifications;
-    private TCSPushComponent tcsPush;
-    private Function1<Location, Unit> gpsTrackingFunction;
+	private TCSComponentsProvider tcsProvider;
+	private TCSAndroidPermissionManager tcsPermission;
+	private TCSKVStorage tcsStorage;
+	private TCSBenefitsDynamicLinksHandler tcsLinks;
+	private TCSBenefitsNotificationsProvider tcsNotifications;
+	private TCSPushComponent tcsPush;
+	private Function1<Location, Unit> gpsTrackingFunction;
 
-    @Override
-    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-        super.initialize(cordova, webView);
+	@Override
+	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+		super.initialize(cordova, webView);
 
-        this.context = this.cordova.getActivity().getApplicationContext();
-        this.tcsProvider = TCSBenefitsModule.getTcsProvider();
-        this.tcsPermission = TCSBenefitsModule.getTcsPermissionManager();
-        this.tcsStorage = this.tcsProvider.provideKVComponent();
-        this.tcsLinks = TCSBenefitsModule.getTcsLinksHandler();
-        this.tcsNotifications = TCSBenefitsModule.getTcsNotificationsHandler();
-        this.tcsPush = TCSBenefitsModule.getTcsPush();
-    }
+		this.context = this.cordova.getActivity().getApplicationContext();
+		this.tcsProvider = TCSBenefitsModule.getTcsProvider();
+		this.tcsPermission = TCSBenefitsModule.getTcsPermissionManager();
+		this.tcsStorage = this.tcsProvider.provideKVComponent();
+		this.tcsLinks = TCSBenefitsModule.getTcsLinksHandler();
+		this.tcsNotifications = TCSBenefitsModule.getTcsNotificationsHandler();
+		this.tcsPush = TCSBenefitsModule.getTcsPush();
+	}
 
-    @Override
-    public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
+	@Override
+	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
-        if (action.equals("startTrackingLocationUpdates")) {
-            startTrackingLocationUpdates(callbackContext);
+		if (action.equals("startTrackingLocationUpdates")) {
+			startTrackingLocationUpdates(callbackContext);
 
-        } else if (action.equals("stopTrackingLocationUpdates")) {
-            stopTrackingLocationUpdates();
+		} else if (action.equals("stopTrackingLocationUpdates")) {
+			stopTrackingLocationUpdates();
 
-        } else if (action.equals("hasGpsPermission")) {
-            boolean hasPermission = hasGpsPermission();
-            callbackContext.success(hasPermission ? "1" : "0");
+		} else if (action.equals("hasGpsPermission")) {
+			boolean hasPermission = hasGpsPermission();
+			callbackContext.success(hasPermission ? "1" : "0");
 
-        } else if (action.equals("requestGpsPermission")) {
-            requestGpsPermission(callbackContext);
+		} else if (action.equals("requestGpsPermission")) {
+			requestGpsPermission(args.getString(0), callbackContext);
 
-        } else if (action.equals("storageSave")) {
-            storageSave(args.getString(0), args.getString(1));
+		} else if (action.equals("storageSave")) {
+			storageSave(args.getString(0), args.getString(1));
 
-        } else if (action.equals("storageLoad")) {
-            String savedString = storageLoad(args.getString(0));
-            callbackContext.success(savedString);
+		} else if (action.equals("storageLoad")) {
+			String savedString = storageLoad(args.getString(0));
+			callbackContext.success(savedString);
 
-        } else if (action.equals("storageClear")) {
-            storageClear(args.getString(0));
+		} else if (action.equals("storageClear")) {
+			storageClear(args.getString(0));
 
-        } else if (action.equals("getMemberInfo")) {
-            getMemberInfo(callbackContext);
+		} else if (action.equals("getMemberInfo")) {
+			getMemberInfo(callbackContext);
 
-        } else if (action.equals("registerDeepLinks")) {
-            tcsLinks.setCallbackContext(callbackContext);
-            tcsNotifications.setCallbackContext(callbackContext);
+		} else if (action.equals("registerDeepLinks")) {
+			tcsLinks.setCallbackContext(callbackContext);
+			tcsNotifications.setCallbackContext(callbackContext);
 
-        } else if (action.equals("getPushToken")) {
-            tcsPush.subscribeOnPushNotifications(new Function1<String, Unit>() {
-                @Override
-                public Unit invoke(String s) {
-                    PluginResult result = new PluginResult(PluginResult.Status.OK, s);
-                    result.setKeepCallback(true);
-                    callbackContext.sendPluginResult(result);
-                    return null;
-                }
-            });
+		} else if (action.equals("getPushToken")) {
+			tcsPush.subscribeOnPushTokenUpdates(new Function1<String, Unit>() {
+				@Override
+				public Unit invoke(String s) {
+					PluginResult result = new PluginResult(PluginResult.Status.OK, s);
+					result.setKeepCallback(true);
+					callbackContext.sendPluginResult(result);
+					return null;
+				}
+			});
+		}
+		return true;
+	}
 
-        }
-        return true;
-    }
+	private void startTrackingLocationUpdates(final CallbackContext cb) {
+		final TCSGPSComponent tcsGps = this.tcsProvider.provideGPSLocationComponent();
+		this.gpsTrackingFunction = new Function1<Location, Unit>() {
+			@Override
+			public Unit invoke(Location location) {
+				Log.d("GPS Tracking", "In method....");
 
-    private void startTrackingLocationUpdates(final CallbackContext cb) {
-        final TCSGPSComponent tcsGps = this.tcsProvider.provideGPSLocationComponent();
-        this.gpsTrackingFunction = new Function1<Location, Unit>() {
-            @Override
-            public Unit invoke(Location location) {
-                Log.d("GPS Tracking", "In method....");
+				JSONObject gpsObj = new JSONObject();
 
-                JSONObject gpsObj = new JSONObject();
+				try {
+					gpsObj.put("latitude", location.getLatitude());
+					gpsObj.put("longitude", location.getLongitude());
+					gpsObj.put("accuracy", location.getAccuracy());
 
-                try {
-                    gpsObj.put("latitude", location.getLatitude());
-                    gpsObj.put("longitude", location.getLongitude());
-                    gpsObj.put("accuracy", location.getAccuracy());
+					PluginResult result = new PluginResult(PluginResult.Status.OK, gpsObj);
+					result.setKeepCallback(true);
+					cb.sendPluginResult(result);
 
-                    PluginResult result = new PluginResult(PluginResult.Status.OK, gpsObj);
-                    result.setKeepCallback(true);
-                    cb.sendPluginResult(result);
+				}
+				catch (JSONException ex) {}
 
-                }
-                catch (JSONException ex) {}
+				Log.d("GPS Tracking", "End reached");
+				return null;
+			}
+		};
 
-                Log.d("GPS Tracking", "End reached");
-                return null;
-            }
-        };
+		tcsGps.startTrackingLocationUpdates(this.cordova.getActivity(), this.gpsTrackingFunction);
+	}
 
-        tcsGps.startTrackingLocationUpdates(this.cordova.getActivity(), this.gpsTrackingFunction);
-    }
+	private void stopTrackingLocationUpdates() {
+		final TCSGPSComponent tcsGps = this.tcsProvider.provideGPSLocationComponent();
+		tcsGps.stopTrackingLocationUpdates(this.gpsTrackingFunction);
+	}
 
-    private void stopTrackingLocationUpdates() {
-        final TCSGPSComponent tcsGps = this.tcsProvider.provideGPSLocationComponent();
-        tcsGps.stopTrackingLocationUpdates(this.gpsTrackingFunction);
-    }
+	private boolean hasGpsPermission() {
+		return this.tcsPermission.isLocationPermissionGranted(this.context);
+	}
 
-    private boolean hasGpsPermission() {
-        return this.tcsPermission.isLocationPermissionGranted(this.context);
-    }
+	private void requestGpsPermission(String requestPermissionText, final CallbackContext cb) {
+		TCSBenefitsPermissionListener listener = new TCSBenefitsPermissionListener(cb);
+		Log.d("Before GPS call", "Before GPS call");
+		try {
+			this.tcsPermission.requestLocationPermission(this.cordova.getActivity(), requestPermissionText, listener);
+		} catch(Exception ex) {
+			Log.e("Error in GPS", ex.getLocalizedMessage());
+		}
+	}
 
-    private void requestGpsPermission(final CallbackContext cb) {
-        TCSBenefitsPermissionListener listener = new TCSBenefitsPermissionListener(cb);
-        this.tcsPermission.requestLocationPermission(this.cordova.getActivity(), "GPS Permission", listener);
-    }
+	private void storageSave(String key, String value) {
+		this.tcsStorage.setStringValue(key, value);
+	}
 
-    private void storageSave(String key, String value) {
-        this.tcsStorage.setStringValue(key, value);
-    }
+	private String storageLoad(String key) {
+		return this.tcsStorage.getStringValue(key, null);
+	}
 
-    private String storageLoad(String key) {
-        return this.tcsStorage.getStringValue(key, null);
-    }
+	private void storageClear(String key) {
+		this.tcsStorage.removeValue(key);
+	}
 
-    private void storageClear(String key) {
-        this.tcsStorage.removeValue(key);
-    }
+	private void getMemberInfo(final CallbackContext cb) {
+		TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
+		if (tcsUser.isLoggedIn()) {
+			tcsUser.getAccountInfo(new Function1<Account, Unit>() {
+				@Override
+				public Unit invoke(Account account) {
+					JSONObject result = new JSONObject();
 
-    private void getMemberInfo(final CallbackContext cb) {
-        TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
-        if (tcsUser.isLoggedIn()) {
-            tcsUser.getAccountInfo(new Function1<Account, Unit>() {
-                @Override
-                public Unit invoke(Account account) {
-                    JSONObject result = new JSONObject();
+					try {
+						result.put("memberNumber", account.getPersonalReference());
+						result.put("email", account.getEmail());
+						result.put("sectionCode", account.getSectionCode());
 
-                    try {
-                        result.put("memberNumber", account.getPersonalReference());
-                        result.put("email", account.getEmail());
-                        result.put("sectionCode", account.getSectionCode());
+						cb.success(result);
+					}
+					catch (JSONException ex) {}
 
-                        cb.success(result);
-                    }
-                    catch (JSONException ex) {}
+					return null;
+				}
+			}, new Function2<Integer, String, Unit>() {
+				@Override
+				public Unit invoke(Integer integer, String s) {
+					Log.e("Error", s);
+					return null;
+				}
+			}); // function2 = errorCallback
+		}
+		else {
+			cb.success("");
+		}
 
-                    return null;
-                }
-            }, new Function2<Integer, String, Unit>() {
-                @Override
-                public Unit invoke(Integer integer, String s) {
-                    Log.e("Error", s);
-                    return null;
-                }
-            }); // function2 = errorCallback
-        }
-        else {
-            cb.success("");
-        }
-
-    }
+	}
 
 }
