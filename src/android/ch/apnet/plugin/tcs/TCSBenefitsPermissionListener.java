@@ -20,13 +20,11 @@ public class TCSBenefitsPermissionListener implements TCSPermissionRequestListen
 
 	@Override
 	public void onPermissionGranted() {
-		Log.d("PermissionGranted", "In Method");
 		this.callbackContext.success("1");
 	}
 
 	@Override
 	public void onPermissionDenied() {
-		Log.d("PermssionDenied", "In Method");
 		this.callbackContext.success("0");
 	}
 

@@ -106,8 +106,6 @@ public class TCSPlugin extends CordovaPlugin {
 		this.gpsTrackingFunction = new Function1<Location, Unit>() {
 			@Override
 			public Unit invoke(Location location) {
-				Log.d("GPS Tracking", "In method....");
-
 				JSONObject gpsObj = new JSONObject();
 
 				try {
@@ -121,8 +119,6 @@ public class TCSPlugin extends CordovaPlugin {
 
 				}
 				catch (JSONException ex) {}
-
-				Log.d("GPS Tracking", "End reached");
 				return null;
 			}
 		};
@@ -141,12 +137,7 @@ public class TCSPlugin extends CordovaPlugin {
 
 	private void requestGpsPermission(String requestPermissionText, final CallbackContext cb) {
 		TCSBenefitsPermissionListener listener = new TCSBenefitsPermissionListener(cb);
-		Log.d("Before GPS call", "Before GPS call");
-		try {
-			this.tcsPermission.requestLocationPermission(this.cordova.getActivity(), requestPermissionText, listener);
-		} catch(Exception ex) {
-			Log.e("Error in GPS", ex.getLocalizedMessage());
-		}
+		this.tcsPermission.requestLocationPermission(this.cordova.getActivity(), requestPermissionText, listener);
 	}
 
 	private void storageSave(String key, String value) {
