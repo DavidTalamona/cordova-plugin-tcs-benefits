@@ -166,7 +166,8 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
     @objc(navigateBack:)
     func navigateBack(command: CDVInvokedUrlCommand) {
-        TCSBenefitsModule.getCordovaViewController()!.dismiss(animated: true, completion: nil)
+        let controller = TCSBenefitsModule.getCordovaViewController()!
+        controller.navigationController?.popViewController(animated: true)
     }
 
     func tcsLocationDidUpdate(location: CLLocation) {
