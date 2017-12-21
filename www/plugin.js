@@ -33,6 +33,9 @@ var TCSPlugin = {
 	},
 	getPushToken: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'getPushToken', []);
+	},
+	navigateBack: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'navigateBack', []);
 	}
 };
 

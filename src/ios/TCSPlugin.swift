@@ -146,7 +146,7 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
     @objc(registerDeepLinks:)
     func registerDeepLinks(command: CDVInvokedUrlCommand) {
-        //TODO: implement
+        //TODO: check if something like deepLinks exists on iOS
     }
 
     @objc(getPushToken:)
@@ -162,6 +162,11 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
             pluginResult,
             callbackId: command.callbackId
         )
+    }
+
+    @objc(navigateBack:)
+    func navigateBack(command: CDVInvokedUrlCommand) {
+        TCSBenefitsModule.getCordovaViewController()!.dismiss(animated: true, completion: nil)
     }
 
     func tcsLocationDidUpdate(location: CLLocation) {
