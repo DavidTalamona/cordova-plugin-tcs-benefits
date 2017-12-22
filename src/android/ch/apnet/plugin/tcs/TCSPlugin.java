@@ -27,7 +27,6 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 
-
 public class TCSPlugin extends CordovaPlugin {
 	private static final String TAG = "TCSPlugin";
 
@@ -97,6 +96,8 @@ public class TCSPlugin extends CordovaPlugin {
 					return null;
 				}
 			});
+		} else if (action.equals("navigateBack")) {
+			this.cordova.getActivity().finish();
 		}
 		return true;
 	}

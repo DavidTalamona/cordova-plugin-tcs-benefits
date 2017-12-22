@@ -36,7 +36,11 @@ var TCSPlugin = {
 	},
 	navigateBack: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'navigateBack', []);
+	},
+	enableSwipeBack: function(isEnabled, cb) {
+		exec(cb, null, PLUGIN_NAME, 'enableSwipeBack', [isEnabled])
 	}
+
 };
 
 module.exports = TCSPlugin;

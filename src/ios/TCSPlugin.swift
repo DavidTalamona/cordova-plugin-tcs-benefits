@@ -147,6 +147,8 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     @objc(registerDeepLinks:)
     func registerDeepLinks(command: CDVInvokedUrlCommand) {
         //TODO: check if something like deepLinks exists on iOS
+        let controller = TCSBenefitsModule.getCordovaViewController()!
+        controller.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
 
     @objc(getPushToken:)
@@ -168,6 +170,13 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     func navigateBack(command: CDVInvokedUrlCommand) {
         let controller = TCSBenefitsModule.getCordovaViewController()!
         controller.navigationController?.popViewController(animated: true)
+    }
+
+    @objc(enableSwipeBack:)
+    func enableSwipeBack(command: CDVInvokedUrlCommand) {
+        let isEnabled = command.arguments[0] as? Bool ?? false
+        let controller = TCSBenefitsModule.getCordovaViewController()!
+        controller.enableSwipeBack(isEnabled: isEnabled)
     }
 
     func tcsLocationDidUpdate(location: CLLocation) {
