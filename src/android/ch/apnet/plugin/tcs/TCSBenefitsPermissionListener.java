@@ -1,7 +1,5 @@
 package ch.apnet.plugin.tcs;
 
-import android.util.Log;
-
 import org.apache.cordova.CallbackContext;
 
 import ch.tcs.android.tcsframework.managers.permissions.helperinterfaces.TCSPermissionRequestListener;

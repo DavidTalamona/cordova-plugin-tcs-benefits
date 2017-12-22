@@ -147,8 +147,6 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     @objc(registerDeepLinks:)
     func registerDeepLinks(command: CDVInvokedUrlCommand) {
         //TODO: check if something like deepLinks exists on iOS
-        let controller = TCSBenefitsModule.getCordovaViewController()!
-        controller.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
 
     @objc(getPushToken:)
