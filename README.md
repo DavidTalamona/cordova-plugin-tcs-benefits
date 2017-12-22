@@ -150,3 +150,27 @@ Result:
 ```
 "pushToken"
 ```
+
+## navigateBack
+
+Call:
+```typescript
+window['TCSPlugin'].navigateBack();
+```
+
+Result:
+```
+void
+```
+
+## enableSwipeBack (iOS only)
+
+Call:
+```typescript
+window['TCSPlugin'].enableSwipeBack(true); // or .enableSwipeBack(false)
+```
+
+Result:
+```
+void
+```
