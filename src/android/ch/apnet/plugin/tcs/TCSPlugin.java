@@ -155,6 +155,7 @@ public class TCSPlugin extends CordovaPlugin {
 
 	private void getStartupParameters(final CallbackContext cb) {
 		cb.success(TCSBenefitsModule.startupJSON);
+		TCSBenefitsModule.startupJSON = null;
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {
