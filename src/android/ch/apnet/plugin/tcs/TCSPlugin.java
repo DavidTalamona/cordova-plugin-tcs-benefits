@@ -2,7 +2,6 @@ package ch.apnet.plugin.tcs;
 
 import android.content.Context;
 import android.location.Location;
-import android.telecom.Call;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -14,9 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.apnet.module.tcs.android.TCSBenefitsDynamicLinksHandler;
 import ch.apnet.module.tcs.android.TCSBenefitsModule;
-import ch.apnet.module.tcs.android.TCSBenefitsNotificationsProvider;
 import ch.tcs.android.tcsframework.components.TCSGPSComponent;
 import ch.tcs.android.tcsframework.components.TCSKVStorage;
 import ch.tcs.android.tcsframework.components.TCSPushComponent;
@@ -36,8 +33,6 @@ public class TCSPlugin extends CordovaPlugin {
 	private TCSComponentsProvider tcsProvider;
 	private TCSAndroidPermissionManager tcsPermission;
 	private TCSKVStorage tcsStorage;
-	private TCSBenefitsDynamicLinksHandler tcsLinks;
-	private TCSBenefitsNotificationsProvider tcsNotifications;
 	private TCSPushComponent tcsPush;
 	private Function1<Location, Unit> gpsTrackingFunction;
 
@@ -49,8 +44,6 @@ public class TCSPlugin extends CordovaPlugin {
 		this.tcsProvider = TCSBenefitsModule.getTcsProvider();
 		this.tcsPermission = TCSBenefitsModule.getTcsPermissionManager();
 		this.tcsStorage = this.tcsProvider.provideKVComponent();
-		this.tcsLinks = TCSBenefitsModule.getTcsLinksHandler();
-		this.tcsNotifications = TCSBenefitsModule.getTcsNotificationsHandler();
 		this.tcsPush = TCSBenefitsModule.getTcsPush();
 	}
 
