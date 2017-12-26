@@ -28,7 +28,7 @@ var TCSPlugin = {
 	getMemberInfo: function(cb) { // returns empty string if no user is logged in
 		exec(cb, null, PLUGIN_NAME, 'getMemberInfo', []);
 	},
-	registerDeepLinks: function(cb) {
+	getStartupParameters: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'getStartupParameters', []);
 	},
 	getPushToken: function(cb) {
