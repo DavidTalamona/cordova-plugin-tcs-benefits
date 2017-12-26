@@ -29,7 +29,7 @@ var TCSPlugin = {
 		exec(cb, null, PLUGIN_NAME, 'getMemberInfo', []);
 	},
 	registerDeepLinks: function(cb) {
-		exec(cb, null, PLUGIN_NAME, 'registerDeepLinks', []);
+		exec(cb, null, PLUGIN_NAME, 'getStartupParameters', []);
 	},
 	getPushToken: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'getPushToken', []);

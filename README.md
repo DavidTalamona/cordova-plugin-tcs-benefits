@@ -108,14 +108,26 @@ Result:
 }
 ```
 
-## registerDeepLinks
+## getStartupParameters
 
 Call:
 ```typescript
-window['TCSPlugin'].registerDeepLinks((result) => {});
+window['TCSPlugin'].getStartupParameters((result) => {});
 ```
 
 Result:
+
+for view startup (page can be "GetToKnow" or "Cashback")
+
+```json
+{
+  "type": "startup",
+  "page": "GetToKnow"
+}
+```
+
+or
+
 ```json
 {
   "type": "dynamicLink",

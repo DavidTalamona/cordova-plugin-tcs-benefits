@@ -2,6 +2,7 @@ package ch.apnet.plugin.tcs;
 
 import android.content.Context;
 import android.location.Location;
+import android.telecom.Call;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -82,9 +83,8 @@ public class TCSPlugin extends CordovaPlugin {
 		} else if (action.equals("getMemberInfo")) {
 			getMemberInfo(callbackContext);
 
-		} else if (action.equals("registerDeepLinks")) {
-			tcsLinks.setCallbackContext(callbackContext);
-			tcsNotifications.setCallbackContext(callbackContext);
+		} else if (action.equals("getStartupParameters")) {
+			getStartupParameters(callbackContext);
 
 		} else if (action.equals("getPushToken")) {
 			tcsPush.subscribeOnPushTokenUpdates(new Function1<String, Unit>() {
@@ -151,6 +151,10 @@ public class TCSPlugin extends CordovaPlugin {
 
 	private void storageClear(String key) {
 		this.tcsStorage.removeValue(key);
+	}
+
+	private void getStartupParameters(final CallbackContext cb) {
+		cb.success(TCSBenefitsModule.startupJSON);
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {
