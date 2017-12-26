@@ -77,6 +77,7 @@ public class TCSPlugin extends CordovaPlugin {
 			getMemberInfo(callbackContext);
 
 		} else if (action.equals("getStartupParameters")) {
+			Log.d("startup", "startup");
 			getStartupParameters(callbackContext);
 
 		} else if (action.equals("getPushToken")) {
@@ -147,8 +148,13 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void getStartupParameters(final CallbackContext cb) {
-		cb.success(TCSBenefitsModule.startupJSON);
-		TCSBenefitsModule.startupJSON = null;
+		if (TCSBenefitsModule.startupJSON != null) {
+			cb.success(TCSBenefitsModule.startupJSON);
+			TCSBenefitsModule.startupJSON = null;
+		}
+		else {
+			cb.success("");
+		}
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {

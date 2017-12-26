@@ -126,7 +126,7 @@ for view startup (page can be "GetToKnow" or "Cashback")
 }
 ```
 
-or
+or (in case of dynamic link)
 
 ```json
 {
@@ -138,7 +138,7 @@ or
 }
 ```
 
-or
+or (in case of system notification)
 
 ```json
 {
@@ -149,6 +149,12 @@ or
     "key": "value"
   }
 }
+```
+
+or (if nothing special = normal startup)
+
+```
+""
 ```
 
 ## getPushToken
