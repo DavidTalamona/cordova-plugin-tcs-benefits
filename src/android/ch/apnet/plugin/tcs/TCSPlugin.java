@@ -22,6 +22,7 @@ import ch.tcs.android.tcsframework.domain.model.login.Account;
 import ch.tcs.android.tcsframework.managers.permissions.TCSAndroidPermissionManager;
 import ch.tcs.android.tcsframework.providers.TCSComponentsProvider;
 import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 
@@ -92,6 +93,9 @@ public class TCSPlugin extends CordovaPlugin {
 			});
 		} else if (action.equals("navigateBack")) {
 			this.cordova.getActivity().finish();
+		} else if (action.equals("showPage")) {
+			String page = storageLoad(args.getString(0));
+			showPage(page, callbackContext);
 		}
 		return true;
 	}
@@ -158,21 +162,31 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {
-		TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
+		final TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
 		if (tcsUser.isLoggedIn()) {
-			tcsUser.getAccountInfo(new Function1<Account, Unit>() {
+			tcsUser.getAccountInfo(null, false, new Function1<Account, Unit>() {
 				@Override
-				public Unit invoke(Account account) {
-					JSONObject result = new JSONObject();
+				public Unit invoke(final Account account) {
 
-					try {
-						result.put("memberNumber", account.getPersonalReference());
-						result.put("email", account.getEmail());
-						result.put("sectionCode", account.getSectionCode());
+					tcsUser.getUserType(new Function1<String, Unit>() {
+						@Override
+						public Unit invoke(String userType) {
 
-						cb.success(result);
-					}
-					catch (JSONException ex) {}
+							try {
+								JSONObject result = new JSONObject();
+
+								result.put("memberNumber", account.getPersonalReference());
+								result.put("email", account.getEmail());
+								result.put("sectionCode", account.getSectionCode());
+								result.put("userType", userType);
+
+								cb.success(result);
+							}
+							catch (JSONException ex) {}
+
+							return null;
+						}
+					});
 
 					return null;
 				}
@@ -188,6 +202,27 @@ public class TCSPlugin extends CordovaPlugin {
 			cb.success("");
 		}
 
+	}
+
+	private void showPage(String page, final CallbackContext cb) {
+		if (page.toLowerCase().equals("login")) {
+			final TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
+			tcsUser.showLoginScreen(new Function0<Unit>() {
+				@Override
+				public Unit invoke() {
+					// Success Callback
+					return null;
+				}
+			}, new Function0<Unit>() {
+				@Override
+				public Unit invoke() {
+					// Error Callback
+					return null;
+				}
+			});
+		} else if (page.toLowerCase().equals("membercard")) {
+			//TODO: fehlt noch im TCSSDK
+		}
 	}
 
 }

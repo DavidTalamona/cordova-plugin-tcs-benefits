@@ -39,6 +39,9 @@ var TCSPlugin = {
 	},
 	enableSwipeBack: function(isEnabled, cb) {
 		exec(cb, null, PLUGIN_NAME, 'enableSwipeBack', [isEnabled])
+	},
+	showPage: function(page, cb) {
+		exec(cb, null, PLUGIN_NAME, 'showPage', [page])
 	}
 
 };

@@ -104,7 +104,8 @@ Result:
 {
   "memberNumber": "12345678",
   "email": "muster@tcs.ch",
-  "sectionCode": "17"
+  "sectionCode": "17",
+  "userType": "Client" // can be "Client, Member or Unknown"
 }
 ```
 
@@ -186,6 +187,18 @@ void
 Call:
 ```typescript
 window['TCSPlugin'].enableSwipeBack(true); // or .enableSwipeBack(false)
+```
+
+Result:
+```
+void
+```
+
+## showPage
+
+Call:
+```typescript
+window['TCSPlugin'].showPage("login"); // Page name can be "login" or "membercard"
 ```
 
 Result:
