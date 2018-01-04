@@ -164,39 +164,49 @@ public class TCSPlugin extends CordovaPlugin {
 	private void getMemberInfo(final CallbackContext cb) {
 		final TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
 		if (tcsUser.isLoggedIn()) {
-			tcsUser.getAccountInfo(null, false, new Function1<Account, Unit>() {
+			tcsUser.getPersonalReference(new Function1<String, Unit>() {
 				@Override
-				public Unit invoke(final Account account) {
-
-					tcsUser.getUserType(new Function1<String, Unit>() {
+				public Unit invoke(String personalReference) {
+					tcsUser.getAccountInfo(personalReference, true, new Function1<Account, Unit>() {
 						@Override
-						public Unit invoke(String userType) {
+						public Unit invoke(final Account account) {
+							tcsUser.getUserType(new Function1<String, Unit>() {
+								@Override
+								public Unit invoke(String userType) {
 
-							try {
-								JSONObject result = new JSONObject();
+									try {
+										JSONObject result = new JSONObject();
 
-								result.put("memberNumber", account.getPersonalReference());
-								result.put("email", account.getEmail());
-								result.put("sectionCode", account.getSectionCode());
-								result.put("userType", userType);
+										result.put("memberNumber", account.getPersonalReference());
+										result.put("email", account.getEmail());
+										result.put("sectionCode", account.getSectionCode());
+										result.put("userType", userType);
 
-								cb.success(result);
-							}
-							catch (JSONException ex) {}
+										cb.success(result);
+									}
+									catch (JSONException ex) {}
+
+									return null;
+								}
+							});
 
 							return null;
 						}
-					});
-
+					}, new Function2<Integer, String, Unit>() {
+						@Override
+						public Unit invoke(Integer integer, String s) {
+							Log.e("Error", s);
+							return null;
+						}
+					}); // function2 = errorCallback
 					return null;
 				}
-			}, new Function2<Integer, String, Unit>() {
+			}, new Function2<Integer, String, Unit>() { // error callback
 				@Override
 				public Unit invoke(Integer integer, String s) {
-					Log.e("Error", s);
 					return null;
 				}
-			}); // function2 = errorCallback
+			});
 		}
 		else {
 			cb.success("");
