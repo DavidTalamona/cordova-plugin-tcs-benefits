@@ -206,3 +206,15 @@ Result:
 "0" => User has not logged in
 "1" => User has logged in
 ```
+
+## registerCustomEvents
+
+Call:
+```typescript
+window['TCSPlugin'].registerCustomEvents((event) => {});
+```
+
+Result:
+```
+"start" => (iOS only) in case of app start
+```
