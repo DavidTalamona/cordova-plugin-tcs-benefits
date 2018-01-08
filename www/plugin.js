@@ -42,6 +42,9 @@ var TCSPlugin = {
 	},
 	showPage: function(page, cb) {
 		exec(cb, null, PLUGIN_NAME, 'showPage', [page])
+	},
+	registerCustomEvents: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'registerCustomEvents', [])
 	}
 
 };

@@ -12,6 +12,7 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     private var tcsPush: TCSPushNotifications?
 
     private var locationCommandInvoked: CDVInvokedUrlCommand?
+    private static var customEventCallback: CDVInvokedUrlCommand?
 
     override func pluginInitialize() {
         super.pluginInitialize()
@@ -115,10 +116,18 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
         if (self.tcsUser!.isLoggedIn()) {
             let userProfile = self.tcsUser!.getUserProfile()!
 
+            var userType = "Unknown"
+            if (userProfile.userType!.isClient) {
+                userType = "Client"
+            } else if (userProfile.userType!.isMember) {
+                userType = "Member"
+            }
+
             let jsonObject: [String: Any] = [
                 "memberNumber": userProfile.membership,
                 "email": userProfile.email ?? "",
-                "sectionCode": userProfile.section
+                "sectionCode": userProfile.section,
+                "userType": userType
             ]
 
             let pluginResult = CDVPluginResult(
@@ -144,9 +153,31 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
     }
 
-    @objc(registerDeepLinks:)
-    func registerDeepLinks(command: CDVInvokedUrlCommand) {
-        //TODO: check if something like deepLinks exists on iOS
+    @objc(getStartupParameters:)
+    func getStartupParameters(command: CDVInvokedUrlCommand) {
+        if (TCSBenefitsModule.startupJSON != nil) {
+            let pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: TCSBenefitsModule.startupJSON
+            )
+            self.commandDelegate!.send(
+                pluginResult,
+                callbackId: command.callbackId
+            )
+
+            // reset startup parameter after request
+            TCSBenefitsModule.startupJSON = nil
+
+        } else {
+            let pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: ""
+            )
+            self.commandDelegate!.send(
+                pluginResult,
+                callbackId: command.callbackId
+            )
+        }
     }
 
     @objc(getPushToken:)
@@ -175,6 +206,35 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
         let isEnabled = command.arguments[0] as? Bool ?? false
         let controller = TCSBenefitsModule.getCordovaViewController()!
         controller.enableSwipeBack(isEnabled: isEnabled)
+    }
+
+    @objc(showPage:)
+    func showPage(command: CDVInvokedUrlCommand) {
+        let page = command.arguments[0] as? String ?? ""
+        if (page.lowercased() == "login") {
+            self.tcsUser!.invokeLoginScreenToOpen()
+        } else if (page.lowercased() == "membercard") {
+            self.tcsUser!.showMemberCard()
+        }
+    }
+
+    @objc(registerCustomEvents:)
+    func registerCustomEvents(command: CDVInvokedUrlCommand) {
+        TCSPlugin.customEventCallback = command
+    }
+
+    static func sendCustomEvent(event: String) {
+        if (TCSPlugin.customEventCallback != nil) {
+            let pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: event
+            )
+
+            self.commandDelegate!.send(
+                pluginResult,
+                callbackId: TCSPlugin.customEventCallback.callbackId
+            )
+        }
     }
 
     func tcsLocationDidUpdate(location: CLLocation) {

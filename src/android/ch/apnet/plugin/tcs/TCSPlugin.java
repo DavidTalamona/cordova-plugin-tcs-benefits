@@ -78,23 +78,14 @@ public class TCSPlugin extends CordovaPlugin {
 			getMemberInfo(callbackContext);
 
 		} else if (action.equals("getStartupParameters")) {
-			Log.d("startup", "startup");
 			getStartupParameters(callbackContext);
 
 		} else if (action.equals("getPushToken")) {
-			tcsPush.subscribeOnPushTokenUpdates(new Function1<String, Unit>() {
-				@Override
-				public Unit invoke(String s) {
-					PluginResult result = new PluginResult(PluginResult.Status.OK, s);
-					result.setKeepCallback(true);
-					callbackContext.sendPluginResult(result);
-					return null;
-				}
-			});
+			callbackContext.success(tcsPush.getLastFetchedPushToken());
 		} else if (action.equals("navigateBack")) {
 			this.cordova.getActivity().finish();
 		} else if (action.equals("showPage")) {
-			String page = storageLoad(args.getString(0));
+			String page = args.getString(0);
 			showPage(page, callbackContext);
 		}
 		return true;
@@ -221,12 +212,14 @@ public class TCSPlugin extends CordovaPlugin {
 				@Override
 				public Unit invoke() {
 					// Success Callback
+					cb.success("1");
 					return null;
 				}
 			}, new Function0<Unit>() {
 				@Override
 				public Unit invoke() {
 					// Error Callback
+					cb.success("0");
 					return null;
 				}
 			});

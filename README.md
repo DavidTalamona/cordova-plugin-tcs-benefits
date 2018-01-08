@@ -203,5 +203,6 @@ window['TCSPlugin'].showPage("login"); // Page name can be "login" or "membercar
 
 Result:
 ```
-void
+"0" => User has not logged in
+"1" => User has logged in
 ```
