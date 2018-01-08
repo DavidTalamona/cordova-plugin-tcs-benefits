@@ -13,9 +13,12 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
     private var locationCommandInvoked: CDVInvokedUrlCommand?
     private static var customEventCallback: CDVInvokedUrlCommand?
+    private static var customEventDelegate: CDVCommandDelegate?
 
     override func pluginInitialize() {
         super.pluginInitialize()
+
+        TCSPlugin.customEventDelegate = self.commandDelegate
 
         self.tcsProvider = TCSBenefitsModule.getTcsProvider()
         self.tcsLocation = self.tcsProvider!.getTCSLocation()
@@ -230,10 +233,14 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
                 messageAs: event
             )
 
-            self.commandDelegate!.send(
-                pluginResult,
-                callbackId: TCSPlugin.customEventCallback.callbackId
-            )
+            pluginResult?.setKeepCallbackAs(true)
+
+            if (TCSPlugin.customEventDelegate != nil) {
+                TCSPlugin.customEventDelegate!.send(
+                    pluginResult,
+                    callbackId: TCSPlugin.customEventCallback!.callbackId
+                )
+            }
         }
     }
 
