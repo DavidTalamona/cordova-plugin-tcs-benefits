@@ -27,7 +27,6 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 
 public class TCSPlugin extends CordovaPlugin {
-	private static final String TAG = "TCSPlugin";
 
 	private Context context;
 
@@ -35,7 +34,10 @@ public class TCSPlugin extends CordovaPlugin {
 	private TCSAndroidPermissionManager tcsPermission;
 	private TCSKVStorage tcsStorage;
 	private TCSPushComponent tcsPush;
+	private TCSUserComponent tcsUser;
 	private Function1<Location, Unit> gpsTrackingFunction;
+
+	private static CallbackContext customEventsCallback;
 
 	@Override
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -46,6 +48,7 @@ public class TCSPlugin extends CordovaPlugin {
 		this.tcsPermission = TCSBenefitsModule.getTcsPermissionManager();
 		this.tcsStorage = this.tcsProvider.provideKVComponent();
 		this.tcsPush = TCSBenefitsModule.getTcsPush();
+		this.tcsUser = this.tcsProvider.provideUserComponent();
 	}
 
 	@Override
@@ -87,6 +90,8 @@ public class TCSPlugin extends CordovaPlugin {
 		} else if (action.equals("showPage")) {
 			String page = args.getString(0);
 			showPage(page, callbackContext);
+		} else if (action.equals("registerCustomEvents")) {
+			registerCustomEvents(callbackContext);
 		}
 		return true;
 	}
@@ -153,7 +158,6 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {
-		final TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
 		if (tcsUser.isLoggedIn()) {
 			tcsUser.getPersonalReference(new Function1<String, Unit>() {
 				@Override
@@ -207,24 +211,35 @@ public class TCSPlugin extends CordovaPlugin {
 
 	private void showPage(String page, final CallbackContext cb) {
 		if (page.toLowerCase().equals("login")) {
-			final TCSUserComponent tcsUser = this.tcsProvider.provideUserComponent();
 			tcsUser.showLoginScreen(new Function0<Unit>() {
 				@Override
 				public Unit invoke() {
 					// Success Callback
 					cb.success("1");
+					Log.d("Toby - Login", "success callback");
 					return null;
 				}
 			}, new Function0<Unit>() {
 				@Override
 				public Unit invoke() {
-					// Error Callback
-					cb.success("0");
+					// error callback
 					return null;
 				}
 			});
 		} else if (page.toLowerCase().equals("membercard")) {
-			//TODO: fehlt noch im TCSSDK
+			tcsUser.showMemberCard();
+		}
+	}
+
+	private void registerCustomEvents(final CallbackContext cb) {
+		TCSPlugin.customEventsCallback = cb;
+	}
+
+	public static void sendCustomEvent(String event) {
+		if (TCSPlugin.customEventsCallback != null) {
+			PluginResult result = new PluginResult(PluginResult.Status.OK, event);
+			result.setKeepCallback(true);
+			TCSPlugin.customEventsCallback.sendPluginResult(result);
 		}
 	}
 

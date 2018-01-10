@@ -203,7 +203,6 @@ window['TCSPlugin'].showPage("login"); // Page name can be "login" or "membercar
 
 Result:
 ```
-"0" => User has not logged in
 "1" => User has logged in
 ```
 
@@ -217,4 +216,6 @@ window['TCSPlugin'].registerCustomEvents((event) => {});
 Result:
 ```
 "start" => (iOS only) in case of app start
+"dynamicLink" => (at the moment Android only) in case of app is started and dynmaicLink gets clicked
+"notification" => (at the moment Android only) in case of app is started and push notification is received
 ```
