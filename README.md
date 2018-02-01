@@ -93,7 +93,7 @@ void
 
 Call:
 ```typescript
-window['TCSPlugin'].getMemberInfo((result) => {});
+window['TCSPlugin'].getMemberInfo((success) => {}, (error) => {});
 ```
 
 Result:
@@ -216,6 +216,6 @@ window['TCSPlugin'].registerCustomEvents((event) => {});
 Result:
 ```
 "start" => (iOS only) in case of app start
-"dynamicLink" => (at the moment Android only) in case of app is started and dynmaicLink gets clicked
-"notification" => (at the moment Android only) in case of app is started and push notification is received
+"dynamicLink" => (at the moment Android only) in case of app is started and a dynamic link gets clicked
+"notification" => (at the moment Android only) in case of app is started and a push notification is received
 ```

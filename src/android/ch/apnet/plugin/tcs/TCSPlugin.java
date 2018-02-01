@@ -48,7 +48,7 @@ public class TCSPlugin extends CordovaPlugin {
 		this.tcsPermission = TCSBenefitsModule.getTcsPermissionManager();
 		this.tcsStorage = this.tcsProvider.provideKVComponent();
 		this.tcsPush = TCSBenefitsModule.getTcsPush();
-		this.tcsUser = this.tcsProvider.provideUserComponent();
+		this.tcsUser = TCSBenefitsModule.getTcsUser();
 	}
 
 	@Override
@@ -85,13 +85,17 @@ public class TCSPlugin extends CordovaPlugin {
 
 		} else if (action.equals("getPushToken")) {
 			callbackContext.success(tcsPush.getLastFetchedPushToken());
+
 		} else if (action.equals("navigateBack")) {
 			this.cordova.getActivity().finish();
+
 		} else if (action.equals("showPage")) {
 			String page = args.getString(0);
 			showPage(page, callbackContext);
+
 		} else if (action.equals("registerCustomEvents")) {
 			registerCustomEvents(callbackContext);
+
 		}
 		return true;
 	}
@@ -158,55 +162,7 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {
-		if (tcsUser.isLoggedIn()) {
-			tcsUser.getPersonalReference(new Function1<String, Unit>() {
-				@Override
-				public Unit invoke(String personalReference) {
-					tcsUser.getAccountInfo(personalReference, true, new Function1<Account, Unit>() {
-						@Override
-						public Unit invoke(final Account account) {
-							tcsUser.getUserType(new Function1<String, Unit>() {
-								@Override
-								public Unit invoke(String userType) {
-
-									try {
-										JSONObject result = new JSONObject();
-
-										result.put("memberNumber", account.getPersonalReference());
-										result.put("email", account.getEmail());
-										result.put("sectionCode", account.getSectionCode());
-										result.put("userType", userType);
-
-										cb.success(result);
-									}
-									catch (JSONException ex) {}
-
-									return null;
-								}
-							});
-
-							return null;
-						}
-					}, new Function2<Integer, String, Unit>() {
-						@Override
-						public Unit invoke(Integer integer, String s) {
-							Log.e("Error", s);
-							return null;
-						}
-					}); // function2 = errorCallback
-					return null;
-				}
-			}, new Function2<Integer, String, Unit>() { // error callback
-				@Override
-				public Unit invoke(Integer integer, String s) {
-					return null;
-				}
-			});
-		}
-		else {
-			cb.success("");
-		}
-
+		TCSBenefitsModule.loadMemberData(true, cb);
 	}
 
 	private void showPage(String page, final CallbackContext cb) {
@@ -215,8 +171,8 @@ public class TCSPlugin extends CordovaPlugin {
 				@Override
 				public Unit invoke() {
 					// Success Callback
+					TCSBenefitsModule.loadMemberData(false, null);
 					cb.success("1");
-					Log.d("Toby - Login", "success callback");
 					return null;
 				}
 			}, new Function0<Unit>() {
@@ -227,7 +183,14 @@ public class TCSPlugin extends CordovaPlugin {
 				}
 			});
 		} else if (page.toLowerCase().equals("membercard")) {
-			tcsUser.showMemberCard();
+			tcsUser.showMemberCard(new Function0<Unit>() {
+				@Override
+				public Unit invoke() {
+					// Success Callback
+					cb.success("1");
+					return null;
+				}
+			});
 		}
 	}
 

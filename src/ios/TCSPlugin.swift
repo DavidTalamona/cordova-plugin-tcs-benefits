@@ -117,14 +117,27 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     func getMemberInfo(command: CDVInvokedUrlCommand) {
 
         if (self.tcsUser!.isLoggedIn()) {
+
+            print("getMemberInfo - case user is logged in")
+            print("getMemberInfo - before getting user profile")
+
             let userProfile = self.tcsUser!.getUserProfile()!
 
+            print("getMemberInfo - after getting user profile")
+
             var userType = "Unknown"
-            if (userProfile.userType!.isClient) {
-                userType = "Client"
-            } else if (userProfile.userType!.isMember) {
-                userType = "Member"
+            if let userTypeInternal = userProfile.userType {
+                if (userTypeInternal.isClient) {
+                    userType = "Client"
+                } else if (userTypeInternal.isMember) {
+                    userType = "Member"
+                }
+            } else {
+                print("getMemberInfo - userProfile.userType is nil")
             }
+
+            print("getMemberInfo - after checking for userType")
+            print("getMemberInfo - userType is: " + userType)
 
             let jsonObject: [String: Any] = [
                 "memberNumber": userProfile.membership,
@@ -132,6 +145,8 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
                 "sectionCode": userProfile.section,
                 "userType": userType
             ]
+
+            print("getMemberInfo - after putting together jsonObject Result")
 
             let pluginResult = CDVPluginResult(
                 status: CDVCommandStatus_OK,
