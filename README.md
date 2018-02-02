@@ -162,12 +162,18 @@ or (if nothing special = normal startup)
 
 Call:
 ```typescript
-window['TCSPlugin'].getPushToken((result) => {});
+window['TCSPlugin'].getPushToken((result) => {}, "Ich brauche die Permission für...");
 ```
 
 Result:
 ```
 "pushToken"
+```
+
+or (if no push permission granted => iOS)
+
+```
+""
 ```
 
 ## navigateBack

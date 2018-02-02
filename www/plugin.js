@@ -31,8 +31,8 @@ var TCSPlugin = {
 	getStartupParameters: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'getStartupParameters', []);
 	},
-	getPushToken: function(cb) {
-		exec(cb, null, PLUGIN_NAME, 'getPushToken', []);
+	getPushToken: function(cb, permissionReasonText) {
+		exec(cb, null, PLUGIN_NAME, 'getPushToken', [permissionReasonText]);
 	},
 	navigateBack: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'navigateBack', []);

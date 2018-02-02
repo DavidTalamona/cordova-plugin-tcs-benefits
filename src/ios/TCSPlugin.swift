@@ -9,7 +9,6 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     private var tcsLocation: TCSLocation?
     private var tcsStorage: TCSKVStorage?
     private var tcsUser: TCSUserComponent?
-    private var tcsPush: TCSPushNotifications?
 
     private var locationCommandInvoked: CDVInvokedUrlCommand?
     private static var customEventCallback: CDVInvokedUrlCommand?
@@ -24,7 +23,6 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
         self.tcsLocation = self.tcsProvider!.getTCSLocation()
         self.tcsStorage = self.tcsProvider!.getTCSKVStorageComponent()
         self.tcsUser = self.tcsProvider!.getTCSUserComponent()
-        self.tcsPush = self.tcsProvider!.getTCSPushNotifications()
     }
 
     @objc(startTrackingLocationUpdates:)
@@ -115,60 +113,7 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
     @objc(getMemberInfo:)
     func getMemberInfo(command: CDVInvokedUrlCommand) {
-
-        if (self.tcsUser!.isLoggedIn()) {
-
-            print("getMemberInfo - case user is logged in")
-            print("getMemberInfo - before getting user profile")
-
-            let userProfile = self.tcsUser!.getUserProfile()!
-
-            print("getMemberInfo - after getting user profile")
-
-            var userType = "Unknown"
-            if let userTypeInternal = userProfile.userType {
-                if (userTypeInternal.isClient) {
-                    userType = "Client"
-                } else if (userTypeInternal.isMember) {
-                    userType = "Member"
-                }
-            } else {
-                print("getMemberInfo - userProfile.userType is nil")
-            }
-
-            print("getMemberInfo - after checking for userType")
-            print("getMemberInfo - userType is: " + userType)
-
-            let jsonObject: [String: Any] = [
-                "memberNumber": userProfile.membership,
-                "email": userProfile.email ?? "",
-                "sectionCode": userProfile.section,
-                "userType": userType
-            ]
-
-            print("getMemberInfo - after putting together jsonObject Result")
-
-            let pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_OK,
-                messageAs: jsonObject
-            )
-
-            self.commandDelegate!.send(
-                pluginResult,
-                callbackId: command.callbackId
-            )
-        } else {
-            let pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_OK,
-                messageAs: ""
-            )
-
-            self.commandDelegate!.send(
-                pluginResult,
-                callbackId: command.callbackId
-            )
-        }
-
+        TCSBenefitsModule.loadMemberData(isLoadingCachedData: true, command: command, commandDelegate: self.commandDelegate)
     }
 
     @objc(getStartupParameters:)
@@ -200,39 +145,73 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
     @objc(getPushToken:)
     func getPushToken(command: CDVInvokedUrlCommand) {
-        let result = self.tcsPush!.deviceToken()
 
-        let pluginResult = CDVPluginResult(
-            status: CDVCommandStatus_OK,
-            messageAs: result
-        )
+        let requestText: String = command.arguments[0] as? String ?? ""
+        let delegate = self.commandDelegate!
 
-        self.commandDelegate!.send(
-            pluginResult,
-            callbackId: command.callbackId
-        )
+        if let tcsPush = self.tcsProvider!.getTCSPushNotifications() {
+            let completion: TCSAskPushPermissionCompletion = {(allowed) in
+                var result: String = ""
+                if (allowed) {
+                    result = tcsPush.deviceToken()!
+                }
+                let pluginResult = CDVPluginResult(
+                    status: CDVCommandStatus_OK,
+                    messageAs: result
+                )
+
+                delegate.send(
+                    pluginResult,
+                    callbackId: command.callbackId
+                )
+            }
+
+            if tcsPush.isRegisteredForPushNotifications() {
+                completion(true)
+            }
+            else {
+                tcsPush.registerForPushNotifications(withText: requestText, completion: completion)
+            }
+        }
+
     }
 
     @objc(navigateBack:)
     func navigateBack(command: CDVInvokedUrlCommand) {
-        let controller = TCSBenefitsModule.getCordovaViewController()!
-        controller.navigationController?.popViewController(animated: true)
+        TCSBenefitsModule.rootController.navigationController?.popViewController(animated: true)
     }
 
     @objc(enableSwipeBack:)
     func enableSwipeBack(command: CDVInvokedUrlCommand) {
         let isEnabled = command.arguments[0] as? Bool ?? false
-        let controller = TCSBenefitsModule.getCordovaViewController()!
-        controller.enableSwipeBack(isEnabled: isEnabled)
+        TCSBenefitsModule.rootController.enableSwipeBack(isEnabled: isEnabled)
     }
 
     @objc(showPage:)
     func showPage(command: CDVInvokedUrlCommand) {
         let page = command.arguments[0] as? String ?? ""
         if (page.lowercased() == "login") {
-            self.tcsUser!.invokeLoginScreenToOpen()
+            self.tcsUser!.showLoginScreen {
+                let pluginResult = CDVPluginResult(
+                    status: CDVCommandStatus_OK,
+                    messageAs: "1"
+                )
+                self.commandDelegate!.send(
+                    pluginResult,
+                    callbackId: command.callbackId
+                )
+            }
         } else if (page.lowercased() == "membercard") {
-            self.tcsUser!.showMemberCard()
+            self.tcsUser!.showMemberCard {
+                let pluginResult = CDVPluginResult(
+                    status: CDVCommandStatus_OK,
+                    messageAs: "1"
+                )
+                self.commandDelegate!.send(
+                    pluginResult,
+                    callbackId: command.callbackId
+                )
+            }
         }
     }
 
