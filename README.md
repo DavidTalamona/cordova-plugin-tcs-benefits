@@ -162,7 +162,7 @@ or (if nothing special = normal startup)
 
 Call:
 ```typescript
-window['TCSPlugin'].getPushToken((result) => {}, "Ich brauche die Permission für...");
+window['TCSPlugin'].getPushToken("Ich brauche die Permission für...", (result) => {});
 ```
 
 Result:
