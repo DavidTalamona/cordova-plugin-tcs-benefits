@@ -45,6 +45,9 @@ var TCSPlugin = {
 	},
 	registerCustomEvents: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'registerCustomEvents', [])
+	},
+	getLanguage: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'getLanguage')
 	}
 
 };

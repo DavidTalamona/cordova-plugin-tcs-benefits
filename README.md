@@ -225,3 +225,15 @@ Result:
 "dynamicLink" => (at the moment Android only) in case of app is started and a dynamic link gets clicked
 "notification" => (at the moment Android only) in case of app is started and a push notification is received
 ```
+
+## getLanguage
+
+Call:
+```typescript
+window['TCSPlugin'].getLanguage((language) => {});
+```
+
+Result:
+```
+"de" or "fr" or "it"
+```
