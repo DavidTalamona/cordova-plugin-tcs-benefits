@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ch.apnet.module.tcs.android.TCSBenefitsModule;
+import ch.apnet.module.tcs.android.TCSBenefitsView;
 import ch.tcs.android.tcsframework.components.TCSGPSComponent;
 import ch.tcs.android.tcsframework.components.TCSKVStorage;
 import ch.tcs.android.tcsframework.components.TCSPushComponent;
@@ -88,6 +89,7 @@ public class TCSPlugin extends CordovaPlugin {
 
 		} else if (action.equals("navigateBack")) {
 			this.cordova.getActivity().finish();
+			TCSBenefitsView.getInstance().displayFreshContent();
 
 		} else if (action.equals("showPage")) {
 			String page = args.getString(0);
