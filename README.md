@@ -237,3 +237,15 @@ Result:
 ```
 "de" or "fr" or "it"
 ```
+
+## openInSystemBrowser (iOS only)
+
+Call:
+```typescript
+window['TCSPlugin'].openInSystemBrowser("[URL]");
+```
+
+Result:
+```
+void
+```

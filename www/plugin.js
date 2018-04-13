@@ -48,6 +48,9 @@ var TCSPlugin = {
 	},
 	getLanguage: function(cb) {
 		exec(cb, null, PLUGIN_NAME, 'getLanguage')
+	},
+	openInSystemBrowser: function(url, cb) {
+		exec(cb, null, PLUGIN_NAME, 'openInSystemBrowser', [url])
 	}
 
 };

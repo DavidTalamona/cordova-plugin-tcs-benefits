@@ -232,6 +232,13 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
         )
     }
 
+    @objc(openInSystemBrowser:)
+    func openInSystemBrowser(command: CDVInvokedUrlCommand) {
+        let urlString: String = command.arguments[0] as? String ?? ""
+        let url = NSURL(string: urlString)!
+        UIApplication.shared.openURL(url as URL)
+    }
+
     static func sendCustomEvent(event: String) {
         if (TCSPlugin.customEventCallback != nil) {
             let pluginResult = CDVPluginResult(
