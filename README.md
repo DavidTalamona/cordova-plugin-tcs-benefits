@@ -53,6 +53,32 @@ Result:
 "1" (permission granted)
 ```
 
+## hasCameraPermission
+
+Call:
+```typescript
+window['TCSPlugin'].hasCameraPermission((result) => {});
+```
+
+Result:
+```
+"0" (no Camera permission)
+"1" (has Camera permission)
+```
+
+## requestCameraPermission
+
+Call:
+```typescript
+window['TCSPlugin'].requestCameraPermission("Ich brauche die Permission für...", "Du kannst den QR Scanner nicht nutzen...", (result) => {});
+```
+
+Result:
+```
+"0" (permission not granted)
+"1" (permission granted)
+```
+
 ## storageSave
 
 Call:

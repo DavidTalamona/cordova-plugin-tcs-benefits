@@ -16,6 +16,12 @@ var TCSPlugin = {
 	requestGpsPermission: function(permissionReasonText, cb) {
 		exec(cb, null, PLUGIN_NAME, 'requestGpsPermission', [permissionReasonText]);
 	},
+	hasCameraPermission: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'hasCameraPermission', []);
+	},
+	requestCameraPermission: function(permissionReasonText, permissionDeniedText, cb) {
+		exec(cb, null, PLUGIN_NAME, 'requestCameraPermission', [permissionReasonText, permissionDeniedText]);
+	},
 	storageSave: function(key, value, cb) {
 		exec(cb, null, PLUGIN_NAME, 'storageSave', [key, value]);
 	},

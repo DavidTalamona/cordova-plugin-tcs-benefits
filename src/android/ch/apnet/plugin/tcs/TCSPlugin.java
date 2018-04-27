@@ -2,7 +2,6 @@ package ch.apnet.plugin.tcs;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -19,13 +18,11 @@ import ch.tcs.android.tcsframework.components.TCSGPSComponent;
 import ch.tcs.android.tcsframework.components.TCSKVStorage;
 import ch.tcs.android.tcsframework.components.TCSPushComponent;
 import ch.tcs.android.tcsframework.components.TCSUserComponent;
-import ch.tcs.android.tcsframework.domain.model.login.Account;
 import ch.tcs.android.tcsframework.managers.permissions.TCSAndroidPermissionManager;
 import ch.tcs.android.tcsframework.providers.TCSComponentsProvider;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
-import kotlin.jvm.functions.Function2;
 
 public class TCSPlugin extends CordovaPlugin {
 
@@ -67,6 +64,13 @@ public class TCSPlugin extends CordovaPlugin {
 
 		} else if (action.equals("requestGpsPermission")) {
 			requestGpsPermission(args.getString(0), callbackContext);
+
+		} else if (action.equals("hasCameraPermission")) {
+			boolean hasPermission = hasCameraPermission();
+			callbackContext.success(hasPermission ? "1" : "0");
+
+		} else if (action.equals("requestCameraPermission")) {
+			requestCameraPermission(args.getString(0), args.getString(1), callbackContext);
 
 		} else if (action.equals("storageSave")) {
 			storageSave(args.getString(0), args.getString(1));
@@ -139,6 +143,15 @@ public class TCSPlugin extends CordovaPlugin {
 	private void requestGpsPermission(String requestPermissionText, final CallbackContext cb) {
 		TCSBenefitsPermissionListener listener = new TCSBenefitsPermissionListener(cb);
 		this.tcsPermission.requestLocationPermission(this.cordova.getActivity(), requestPermissionText, listener);
+	}
+
+	private boolean hasCameraPermission() {
+		return this.tcsPermission.isCameraPermissionGranted(this.context);
+	}
+
+	private void requestCameraPermission(String requestPermissionText, String permissionDeniedText, final CallbackContext cb) {
+		TCSBenefitsPermissionListener listener = new TCSBenefitsPermissionListener(cb);
+		this.tcsPermission.requestCameraPermission(this.cordova.getActivity(), listener, requestPermissionText, permissionDeniedText);
 	}
 
 	private void storageSave(String key, String value) {
