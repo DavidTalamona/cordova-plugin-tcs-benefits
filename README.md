@@ -53,7 +53,7 @@ Result:
 "1" (permission granted)
 ```
 
-## hasCameraPermission
+## hasCameraPermission (Android only)
 
 Call:
 ```typescript
@@ -66,7 +66,7 @@ Result:
 "1" (has Camera permission)
 ```
 
-## requestCameraPermission
+## requestCameraPermission (Android only)
 
 Call:
 ```typescript
