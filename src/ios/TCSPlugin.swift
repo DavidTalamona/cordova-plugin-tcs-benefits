@@ -7,6 +7,7 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
     private var tcsProvider: TCSComponentsProvider?
     private var tcsLocation: TCSLocation?
+    private var tcsCamera: TCSCameraComponent?
     private var tcsStorage: TCSKVStorage?
     private var tcsUser: TCSUserComponent?
 
@@ -23,6 +24,8 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
         self.tcsLocation = self.tcsProvider!.getTCSLocation()
         self.tcsStorage = self.tcsProvider!.getTCSKVStorageComponent()
         self.tcsUser = self.tcsProvider!.getTCSUserComponent()
+        self.tcsCamera = self.tcsProvider!.getTCSCameraComponent()
+
     }
 
     @objc(startTrackingLocationUpdates:)
@@ -73,7 +76,45 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
             )
         }
         self.tcsLocation!.askForLocationPermission(withText: requestText, completion: completion)
+    }
 
+    @objc(hasCameraPermission:)
+    func hasCameraPermission(command: CDVInvokedUrlCommand) {
+        let result = self.tcsCamera!.isPermissionAllowed()
+
+        let pluginResult = CDVPluginResult(
+            status: CDVCommandStatus_OK,
+            messageAs: result ? "1" : "0"
+        )
+
+        self.commandDelegate!.send(
+            pluginResult,
+            callbackId: command.callbackId
+        )
+    }
+
+    @objc(requestCameraPermission:)
+    func requestCameraPermission(command: CDVInvokedUrlCommand) {
+
+        let requestText: String = command.arguments[0] as? String ?? ""
+
+        let completion: TCSAskCameraPermissionCompletion = {[weak self] (allowed) in
+            var isAllowed = "0"
+            if (allowed) {
+                isAllowed = "1"
+            }
+
+            let pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: isAllowed
+            )
+
+            self!.commandDelegate!.send(
+                pluginResult,
+                callbackId: command.callbackId
+            )
+        }
+        self.tcsCamera!.askForCameraPermission(withText: requestText, completion: completion)
     }
 
     @objc(storageSave:)
@@ -107,7 +148,6 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     @objc(storageClear:)
     func storageClear(command: CDVInvokedUrlCommand) {
         let key = command.arguments[0] as? String ?? ""
-
         self.tcsStorage!.removeValue(forKey: key)
     }
 
