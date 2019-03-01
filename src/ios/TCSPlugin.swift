@@ -193,7 +193,9 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
             let completion: TCSAskPushPermissionCompletion = {(allowed) in
                 var result: String = ""
                 if (allowed) {
-                    result = tcsPush.deviceToken()!
+                    if let token = tcsPush.deviceToken() {
+                        result = token
+                    }
                 }
                 let pluginResult = CDVPluginResult(
                     status: CDVCommandStatus_OK,
@@ -207,8 +209,9 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
 
             if tcsPush.isRegisteredForPushNotifications() {
                 completion(true)
-            }
-            else {
+            } else if (tcsPush.wasPushPermissionDialogShown()) {
+                completion(false)
+            } else {
                 tcsPush.registerForPushNotifications(withText: requestText, completion: completion)
             }
         }
@@ -218,7 +221,7 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     @objc(navigateBack:)
     func navigateBack(command: CDVInvokedUrlCommand) {
         TCSBenefitsModule.rootController.navigationController?.popViewController(animated: true)
-        TCSBenefitsModule.refreshData(isDoingRefresh: false)
+        TCSBenefitsModule.refreshData(forceRefresh: true)
     }
 
     @objc(enableSwipeBack:)
@@ -252,6 +255,8 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
                     callbackId: command.callbackId
                 )
             }
+        } else if (page.lowercased() == "promovideo") {
+            TCSBenefitsCardView.promoVideoStart()
         }
     }
 
@@ -275,8 +280,8 @@ class TCSPlugin : CDVPlugin, TCSLocationDelegate {
     @objc(openInSystemBrowser:)
     func openInSystemBrowser(command: CDVInvokedUrlCommand) {
         let urlString: String = command.arguments[0] as? String ?? ""
-        let url = NSURL(string: urlString)!
-        UIApplication.shared.openURL(url as URL)
+        let url = URL(string: urlString)!
+        UIApplication.shared.open(url)
     }
 
     static func sendCustomEvent(event: String) {

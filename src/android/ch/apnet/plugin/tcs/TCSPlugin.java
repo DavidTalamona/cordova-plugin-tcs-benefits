@@ -93,7 +93,6 @@ public class TCSPlugin extends CordovaPlugin {
 
 		} else if (action.equals("navigateBack")) {
 			this.cordova.getActivity().finish();
-			TCSBenefitsView.getInstance().displayFreshContent();
 
 		} else if (action.equals("showPage")) {
 			String page = args.getString(0);
@@ -177,7 +176,7 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {
-		TCSBenefitsModule.loadMemberData(true, cb);
+		TCSBenefitsModule.loadMemberData( cb);
 	}
 
 	private void showPage(String page, final CallbackContext cb) {
@@ -186,7 +185,7 @@ public class TCSPlugin extends CordovaPlugin {
 				@Override
 				public Unit invoke() {
 					// Success Callback
-					TCSBenefitsModule.loadMemberData(false, null);
+					TCSBenefitsModule.loadMemberData( null);
 					cb.success("1");
 					return null;
 				}
@@ -206,6 +205,8 @@ public class TCSPlugin extends CordovaPlugin {
 					return null;
 				}
 			});
+		} else if (page.toLowerCase().equals("promovideo")) {
+			TCSBenefitsView.startPromoVideo(this.context);
 		}
 	}
 
