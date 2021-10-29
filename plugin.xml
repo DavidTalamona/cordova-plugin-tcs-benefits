@@ -2,10 +2,10 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         id="apnet-cordova-plugin-tcs"
-        version="0.1.4">
+        version="0.2.0">
 	<name>ApNet TCS Plugin</name>
 	<description>Interface from Pluscash TCS app to TCSSDK from iAgentur</description>
-	<license>Copyright ApNet 2017</license>
+	<license>Copyright apNet 2021</license>
 	<keywords></keywords>
 	<repo>https://gitlab.com/cwx-apn/tcs/cordova-plugin.git</repo>
 	<issue>https://gitlab.com/cwx-apn/tcs/cordova-plugin/issues</issue>

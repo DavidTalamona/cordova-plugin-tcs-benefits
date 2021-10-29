@@ -57,7 +57,13 @@ var TCSPlugin = {
 	},
 	openInSystemBrowser: function(url, cb) {
 		exec(cb, null, PLUGIN_NAME, 'openInSystemBrowser', [url])
-	}
+	},
+	getAccessToken: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'getAccessToken', [])
+	},
+	isProductionEnvironment: function(cb) {
+		exec(cb, null, PLUGIN_NAME, 'isProductionEnvironment', [])
+	},
 
 };
 

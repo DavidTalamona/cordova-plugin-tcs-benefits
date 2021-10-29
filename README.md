@@ -275,3 +275,30 @@ Result:
 ```
 void
 ```
+
+## getAccessToken
+
+Call:
+```typescript
+window['TCSPlugin'].getAccessToken((token) => {});
+```
+
+Result:
+```json
+{
+  "expiresIn": "expires_in_result",
+  "accessToken": "token_result"
+}
+```
+
+## isProductionEnvironment
+
+Call:
+```typescript
+window['TCSPlugin'].isProductionEnvironment((isProductionEnvironment) => {});
+```
+
+Result:
+```
+"1" => isProductionEnvironment
+```

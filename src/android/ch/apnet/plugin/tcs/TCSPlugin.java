@@ -2,6 +2,7 @@ package ch.apnet.plugin.tcs;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -18,6 +19,7 @@ import ch.tcs.android.tcsframework.components.TCSGPSComponent;
 import ch.tcs.android.tcsframework.components.TCSKVStorage;
 import ch.tcs.android.tcsframework.components.TCSPushComponent;
 import ch.tcs.android.tcsframework.components.TCSUserComponent;
+import ch.tcs.android.tcsframework.domain.model.UserDataAccessToken;
 import ch.tcs.android.tcsframework.managers.permissions.TCSAndroidPermissionManager;
 import ch.tcs.android.tcsframework.providers.TCSComponentsProvider;
 import kotlin.Unit;
@@ -52,57 +54,87 @@ public class TCSPlugin extends CordovaPlugin {
 	@Override
 	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
-		if (action.equals("startTrackingLocationUpdates")) {
-			startTrackingLocationUpdates(callbackContext);
+		switch (action) {
+			case "startTrackingLocationUpdates":
+				startTrackingLocationUpdates(callbackContext);
 
-		} else if (action.equals("stopTrackingLocationUpdates")) {
-			stopTrackingLocationUpdates();
+				break;
+			case "stopTrackingLocationUpdates":
+				stopTrackingLocationUpdates();
 
-		} else if (action.equals("hasGpsPermission")) {
-			boolean hasPermission = hasGpsPermission();
-			callbackContext.success(hasPermission ? "1" : "0");
+				break;
+			case "hasGpsPermission":
+				callbackContext.success(hasGpsPermission() ? "1" : "0");
 
-		} else if (action.equals("requestGpsPermission")) {
-			requestGpsPermission(args.getString(0), callbackContext);
+				break;
+			case "requestGpsPermission":
+				requestGpsPermission(args.getString(0), callbackContext);
 
-		} else if (action.equals("hasCameraPermission")) {
-			boolean hasPermission = hasCameraPermission();
-			callbackContext.success(hasPermission ? "1" : "0");
+				break;
+			case "hasCameraPermission":
+				callbackContext.success(hasCameraPermission() ? "1" : "0");
 
-		} else if (action.equals("requestCameraPermission")) {
-			requestCameraPermission(args.getString(0), args.getString(1), callbackContext);
+				break;
+			case "requestCameraPermission":
+				requestCameraPermission(args.getString(0), args.getString(1), callbackContext);
 
-		} else if (action.equals("storageSave")) {
-			storageSave(args.getString(0), args.getString(1));
+				break;
+			case "storageSave":
+				storageSave(args.getString(0), args.getString(1));
 
-		} else if (action.equals("storageLoad")) {
-			String savedString = storageLoad(args.getString(0));
-			callbackContext.success(savedString);
+				break;
+			case "storageLoad":
+				String savedString = storageLoad(args.getString(0));
+				callbackContext.success(savedString);
 
-		} else if (action.equals("storageClear")) {
-			storageClear(args.getString(0));
+				break;
+			case "storageClear":
+				storageClear(args.getString(0));
 
-		} else if (action.equals("getMemberInfo")) {
-			getMemberInfo(callbackContext);
+				break;
+			case "getMemberInfo":
+				getMemberInfo(callbackContext);
 
-		} else if (action.equals("getStartupParameters")) {
-			getStartupParameters(callbackContext);
+				break;
+			case "getStartupParameters":
+				getStartupParameters(callbackContext);
 
-		} else if (action.equals("getPushToken")) {
-			callbackContext.success(tcsPush.getLastFetchedPushToken());
+				break;
+			case "getPushToken":
+				callbackContext.success(tcsPush.getLastFetchedPushToken());
 
-		} else if (action.equals("navigateBack")) {
-			this.cordova.getActivity().finish();
+				break;
+			case "navigateBack":
+				this.cordova.getActivity().finish();
 
-		} else if (action.equals("showPage")) {
-			String page = args.getString(0);
-			showPage(page, callbackContext);
+				break;
+			case "showPage":
+				String page = args.getString(0);
+				showPage(page, callbackContext);
 
-		} else if (action.equals("registerCustomEvents")) {
-			registerCustomEvents(callbackContext);
+				break;
+			case "registerCustomEvents":
+				registerCustomEvents(callbackContext);
 
+				break;
+			case "getAccessToken":
+				sendAccessToken(callbackContext);
+
+				break;
+			case "isProductionEnvironment":
+				callbackContext.success(tcsUser.isUsedProductionEnvironment() ? "1" : "0");
+
+				break;
 		}
 		return true;
+	}
+
+	public static void sendCustomEvent(String event) {
+		if (TCSPlugin.customEventsCallback != null) {
+			PluginResult result = new PluginResult(PluginResult.Status.OK, event);
+			result.setKeepCallback(true);
+			TCSPlugin.customEventsCallback.sendPluginResult(result);
+		}
 	}
 
 	private void startTrackingLocationUpdates(final CallbackContext cb) {
@@ -122,7 +154,9 @@ public class TCSPlugin extends CordovaPlugin {
 					cb.sendPluginResult(result);
 
 				}
-				catch (JSONException ex) {}
+				catch (JSONException ex) {
+					Log.d("Exception in GPS", ex.getMessage());
+				}
 				return null;
 			}
 		};
@@ -180,7 +214,7 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void showPage(String page, final CallbackContext cb) {
-		if (page.toLowerCase().equals("login")) {
+		if (page.equalsIgnoreCase("login")) {
 			tcsUser.showLoginScreen(new Function0<Unit>() {
 				@Override
 				public Unit invoke() {
@@ -196,7 +230,7 @@ public class TCSPlugin extends CordovaPlugin {
 					return null;
 				}
 			});
-		} else if (page.toLowerCase().equals("membercard")) {
+		} else if (page.equalsIgnoreCase("membercard")) {
 			tcsUser.showMemberCard(new Function0<Unit>() {
 				@Override
 				public Unit invoke() {
@@ -205,7 +239,7 @@ public class TCSPlugin extends CordovaPlugin {
 					return null;
 				}
 			});
-		} else if (page.toLowerCase().equals("promovideo")) {
+		} else if (page.equalsIgnoreCase("promovideo")) {
 			TCSBenefitsView.startPromoVideo(this.context);
 		}
 	}
@@ -214,12 +248,27 @@ public class TCSPlugin extends CordovaPlugin {
 		TCSPlugin.customEventsCallback = cb;
 	}
 
-	public static void sendCustomEvent(String event) {
-		if (TCSPlugin.customEventsCallback != null) {
-			PluginResult result = new PluginResult(PluginResult.Status.OK, event);
-			result.setKeepCallback(true);
-			TCSPlugin.customEventsCallback.sendPluginResult(result);
-		}
+	private void sendAccessToken(final CallbackContext cb) {
+		tcsUser.getAccessToken(new Function1<UserDataAccessToken, Unit>() {
+			@Override
+			public Unit invoke(UserDataAccessToken token) {
+				JSONObject json = new JSONObject();
+
+				try {
+					json.put("expiresIn", token.getExpiresIn());
+					json.put("accessToken", token.getAccessToken());
+
+					PluginResult result = new PluginResult(PluginResult.Status.OK, json);
+					result.setKeepCallback(true);
+					cb.sendPluginResult(result);
+
+				}
+				catch (JSONException ex) {
+					Log.d("Exception in Token", ex.getMessage());
+				}
+				return null;
+			}
+		});
 	}
 
 }
