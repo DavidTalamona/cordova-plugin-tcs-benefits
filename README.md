@@ -284,11 +284,8 @@ window['TCSPlugin'].getAccessToken((token) => {});
 ```
 
 Result:
-```json
-{
-  "expiresIn": "expires_in_result",
-  "accessToken": "token_result"
-}
+```
+"accessToken"
 ```
 
 ## isProductionEnvironment

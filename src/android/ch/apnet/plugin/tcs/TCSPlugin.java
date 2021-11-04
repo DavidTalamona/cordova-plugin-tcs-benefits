@@ -2,6 +2,7 @@ package ch.apnet.plugin.tcs;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -19,9 +20,11 @@ import ch.tcs.android.tcsframework.components.TCSGPSComponent;
 import ch.tcs.android.tcsframework.components.TCSKVStorage;
 import ch.tcs.android.tcsframework.components.TCSPushComponent;
 import ch.tcs.android.tcsframework.components.TCSUserComponent;
-import ch.tcs.android.tcsframework.domain.model.UserDataAccessToken;
+import ch.tcs.android.tcsframework.components.TCSAccessTokenListener;
 import ch.tcs.android.tcsframework.managers.permissions.TCSAndroidPermissionManager;
+import ch.tcs.android.tcsframework.misc.errors.TCSException;
 import ch.tcs.android.tcsframework.providers.TCSComponentsProvider;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
@@ -210,23 +213,19 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void getMemberInfo(final CallbackContext cb) {
-		TCSBenefitsModule.loadMemberData( cb);
+		TCSBenefitsModule.loadMemberData(cb);
 	}
 
 	private void showPage(String page, final CallbackContext cb) {
 		if (page.equalsIgnoreCase("login")) {
-			tcsUser.showLoginScreen(new Function0<Unit>() {
+			tcsUser.showLoginScreen(new Function1<Boolean, Unit>() {
 				@Override
-				public Unit invoke() {
-					// Success Callback
-					TCSBenefitsModule.loadMemberData( null);
-					cb.success("1");
-					return null;
-				}
-			}, new Function0<Unit>() {
-				@Override
-				public Unit invoke() {
-					// error callback
+				public Unit invoke(Boolean success) {
+					if (success) {
+						// Success Callback
+						TCSBenefitsModule.loadMemberData( null);
+						cb.success("1");
+					}
 					return null;
 				}
 			});
@@ -249,24 +248,15 @@ public class TCSPlugin extends CordovaPlugin {
 	}
 
 	private void sendAccessToken(final CallbackContext cb) {
-		tcsUser.getAccessToken(new Function1<UserDataAccessToken, Unit>() {
+		tcsUser.getAccessToken(new TCSAccessTokenListener() {
 			@Override
-			public Unit invoke(UserDataAccessToken token) {
-				JSONObject json = new JSONObject();
+			public void onSuccess(@Nullable String token) {
+				cb.success(token);
+			}
 
-				try {
-					json.put("expiresIn", token.getExpiresIn());
-					json.put("accessToken", token.getAccessToken());
-
-					PluginResult result = new PluginResult(PluginResult.Status.OK, json);
-					result.setKeepCallback(true);
-					cb.sendPluginResult(result);
-
-				}
-				catch (JSONException ex) {
-					Log.d("Exception in Token", ex.getMessage());
-				}
-				return null;
+			@Override
+			public void onError(@Nullable TCSException e) {
+				cb.error("error fetching token");
 			}
 		});
 	}
